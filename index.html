@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Content Creation Dashboard</title>
+
+    <!-- Bootstrap CSS (Grid only) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">Content Creation</div>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="#" class="nav-item active">
+                <span class="nav-icon">📊</span>
+                <span class="nav-text">Dashboard</span>
+            </a>
+            <a href="#" class="nav-item">
+                <span class="nav-icon">⚙️</span>
+                <span class="nav-text">Settings</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="dashboard-title">Dashboard</h1>
+                        <p class="dashboard-subtitle">Manage your marketing campaigns and strategies.</p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <button class="btn-primary" id="sweepCampaignBtn">+ Select a Campaign</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Statistics Cards -->
+        <section class="statistics-section">
+            <div class="container-fluid">
+                <div class="row g-4">
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div class="stat-label">Active Campaigns</div>
+                            <div class="stat-value" id="activeCampaigns">12</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div class="stat-label">Assets Generated</div>
+                            <div class="stat-value" id="assetsGenerated">1,240</div>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="stat-card">
+                            <div class="stat-label">Team Members</div>
+                            <div class="stat-value" id="teamMembers">8</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filters Section -->
+        <section class="filters-section">
+            <div class="container-fluid">
+                <div class="filters-container">
+                    <div class="filter-group">
+                        <span class="filter-label">FILTER:</span>
+
+                        <div class="filter-checkboxes">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="channel" value="Digital" class="channel-filter">
+                                <span>Digital</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="channel" value="Offline" class="channel-filter">
+                                <span>Offline</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="channel" value="Database" class="channel-filter">
+                                <span>Database</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="channel" value="Alliance" class="channel-filter">
+                                <span>Alliance</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-group">
+                        <span class="filter-label">PLATFORM:</span>
+
+                        <div class="filter-checkboxes">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="platform" value="TikTok" class="platform-filter">
+                                <span>TikTok</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="platform" value="Facebook" class="platform-filter">
+                                <span>Facebook</span>
+                            </label>
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="platform" value="Instagram" class="platform-filter">
+                                <span>Instagram</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Campaigns Section -->
+        <section class="campaigns-section">
+            <div class="container-fluid">
+                <h2 class="section-title">Recent Campaigns</h2>
+
+                <!-- Sales Campaigns Collapsible -->
+                <div class="collapsible-section">
+                    <div class="collapsible-header" data-section="sales">
+                        <span class="collapsible-icon">▼</span>
+                        <span class="collapsible-title">Sales Campaigns</span>
+                        <span class="campaign-count" id="salesCount">(0)</span>
+                    </div>
+                    <div class="collapsible-content" id="salesCampaignsContent">
+                        <div class="table-responsive">
+                            <table class="campaigns-table">
+                                <thead>
+                                    <tr>
+                                        <th>Campaign Code</th>
+                                        <th>Name</th>
+                                        <th>Channel</th>
+                                        <th>Platform</th>
+                                        <th>Budget</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="salesCampaignsTable">
+                                    <!-- Sales campaigns will be rendered here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Marketing Campaigns Collapsible -->
+                <div class="collapsible-section">
+                    <div class="collapsible-header" data-section="marketing">
+                        <span class="collapsible-icon">▼</span>
+                        <span class="collapsible-title">Marketing Campaigns</span>
+                        <span class="campaign-count" id="marketingCount">(0)</span>
+                    </div>
+                    <div class="collapsible-content" id="marketingCampaignsContent">
+                        <div class="table-responsive">
+                            <table class="campaigns-table">
+                                <thead>
+                                    <tr>
+                                        <th>Campaign Code</th>
+                                        <th>Name</th>
+                                        <th>Channel</th>
+                                        <th>Platform</th>
+                                        <th>Budget</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="marketingCampaignsTable">
+                                    <!-- Marketing campaigns will be rendered here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 class="modal-title" id="modalTitle">Select Campaign Type</h3>
+                <button class="modal-close" id="modalClose">&times;</button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Modal content will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/data.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/modal.js"></script>
+</body>
+</html>
