@@ -97,12 +97,21 @@ function showSalesCampaignSelector() {
 
             <div class="form-group">
                 <label class="form-label required">Select Campaign</label>
-                <select class="form-select" name="campaignId" required onchange="showCampaignPreview(this.value, 'sales')">
-                    <option value="">Choose a sales campaign...</option>
-                    ${availableCampaigns.map(campaign => `
-                        <option value="${campaign.id}">${campaign.code} - ${campaign.name}</option>
-                    `).join('')}
-                </select>
+                <div class="searchable-dropdown" data-type="sales">
+                    <input type="text"
+                           class="form-select searchable-input"
+                           id="salesSearchInput"
+                           placeholder="Type to search or click to select..."
+                           autocomplete="off">
+                    <input type="hidden" name="campaignId" required>
+                    <ul class="dropdown-list">
+                        ${availableCampaigns.map(campaign => `
+                            <li class="dropdown-item" data-value="${campaign.id}">
+                                ${campaign.code} - ${campaign.name}
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
             </div>
 
             <div id="campaignPreview" style="display: none; padding: 20px; background: #f8f9fa; border-radius: 8px; margin: 20px 0;">
@@ -117,6 +126,9 @@ function showSalesCampaignSelector() {
             </div>
         </form>
     `;
+
+    // Initialize searchable dropdown after HTML is inserted
+    setTimeout(() => initializeSearchableDropdown(), 0);
 }
 
 // Show Marketing Campaign Selector
@@ -146,12 +158,21 @@ function showMarketingCampaignSelector() {
 
             <div class="form-group">
                 <label class="form-label required">Select Campaign</label>
-                <select class="form-select" name="campaignId" required onchange="showCampaignPreview(this.value, 'marketing')">
-                    <option value="">Choose a marketing campaign...</option>
-                    ${availableCampaigns.map(campaign => `
-                        <option value="${campaign.id}">${campaign.salesCampaignCode} - ${campaign.campaignName}</option>
-                    `).join('')}
-                </select>
+                <div class="searchable-dropdown" data-type="marketing">
+                    <input type="text"
+                           class="form-select searchable-input"
+                           id="marketingSearchInput"
+                           placeholder="Type to search or click to select..."
+                           autocomplete="off">
+                    <input type="hidden" name="campaignId" required>
+                    <ul class="dropdown-list">
+                        ${availableCampaigns.map(campaign => `
+                            <li class="dropdown-item" data-value="${campaign.id}">
+                                ${campaign.salesCampaignCode} - ${campaign.campaignName}
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
             </div>
 
             <div id="campaignPreview" style="display: none; padding: 20px; background: #f8f9fa; border-radius: 8px; margin: 20px 0;">
@@ -166,6 +187,9 @@ function showMarketingCampaignSelector() {
             </div>
         </form>
     `;
+
+    // Initialize searchable dropdown after HTML is inserted
+    setTimeout(() => initializeSearchableDropdown(), 0);
 }
 
 // Show campaign preview when selected
@@ -304,6 +328,67 @@ function navigateToContentCreationFromModal() {
 
     // Navigate to content generator page
     window.location.href = `content-generator.html?campaign=${encodeURIComponent(selectedCampaignId)}`;
+}
+
+// Searchable Dropdown Functions
+function initializeSearchableDropdown() {
+    const dropdowns = document.querySelectorAll('.searchable-dropdown');
+
+    dropdowns.forEach(dropdown => {
+        const searchInput = dropdown.querySelector('.searchable-input');
+        const dropdownList = dropdown.querySelector('.dropdown-list');
+        const hiddenInput = dropdown.querySelector('input[type="hidden"]');
+        const type = dropdown.getAttribute('data-type');
+        const allItems = dropdownList.querySelectorAll('.dropdown-item');
+
+        // Show dropdown on focus/click
+        searchInput.addEventListener('focus', () => {
+            dropdownList.style.display = 'block';
+        });
+
+        searchInput.addEventListener('click', () => {
+            dropdownList.style.display = 'block';
+        });
+
+        // Filter items on input
+        searchInput.addEventListener('input', () => {
+            const searchText = searchInput.value.toLowerCase();
+            let hasVisibleItems = false;
+
+            allItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(searchText)) {
+                    item.style.display = 'block';
+                    hasVisibleItems = true;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            dropdownList.style.display = hasVisibleItems || searchText === '' ? 'block' : 'none';
+        });
+
+        // Handle item selection
+        allItems.forEach(item => {
+            item.addEventListener('click', () => {
+                searchInput.value = item.textContent.trim();
+                hiddenInput.value = item.getAttribute('data-value');
+                dropdownList.style.display = 'none';
+
+                // Show preview
+                showCampaignPreview(item.getAttribute('data-value'), type);
+            });
+        });
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.searchable-dropdown')) {
+            document.querySelectorAll('.dropdown-list').forEach(list => {
+                list.style.display = 'none';
+            });
+        }
+    });
 }
 
 // Attach close button listener

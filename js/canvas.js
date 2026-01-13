@@ -58,11 +58,22 @@ function autoPopulateFromCampaign(campaignId) {
 
     if (campaign) {
         // Auto-populate fields based on campaign data
-        const customerProblem = `Target audience needs AI Application Developer skills but lacks hands-on experience and industry connections.`;
-        const productService = campaign.solutionDescription || campaign.solution;
-        const marketSegment = campaign.country || 'Malaysia, Philippines, Indonesia';
-        const solutionValue = `${campaign.solution} provides work-integrated learning with paid industry experience, bridging the gap between education and employment.`;
-        const keyBenefits = `1. Hands-on learning with real projects\n2. Paid industry experience\n3. Direct pathway to AI Application Developer roles`;
+        const customerProblem = `• Lack of practical experience (especially among fresh grads)
+• Coding task being replaced by AI
+• Lack of business domain knowledge`;
+
+        const productService = `• Skills-first work-integrated learning
+  Intensive AI skilling for in-demand job-ready skills in 6 months through hands-on, industry-level experience from day one
+
+• Embedded 12-month paid apprenticeship as an AI Application Developer
+  12 months of paid work placement in Singapore with real AI and data-driven projects`;
+
+        const marketSegment = `• Fresh Graduates (IT)
+• Early Career Professionals (IT)`;
+
+        const solutionValue = `AI-powered personalized learning journey`;
+
+        const keyBenefits = `Digital – Paid Ads TikTok`;
 
         // Set the values
         document.getElementById('customerProblem').value = customerProblem;

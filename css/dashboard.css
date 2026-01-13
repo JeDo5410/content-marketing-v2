@@ -679,6 +679,53 @@ body {
     background-color: #142d4f;
 }
 
+/* Searchable Dropdown Styles */
+.searchable-dropdown {
+    position: relative;
+}
+
+.searchable-dropdown .searchable-input {
+    cursor: text;
+    width: 100%;
+}
+
+.searchable-dropdown .dropdown-list {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 4px;
+    background: white;
+    border: 1px solid #dfe6e9;
+    border-radius: 8px;
+    max-height: 250px;
+    overflow-y: auto;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    list-style: none;
+    padding: 0;
+    margin: 4px 0 0 0;
+    display: none;
+}
+
+.searchable-dropdown .dropdown-item {
+    padding: 12px 14px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #2c3e50;
+    border-bottom: 1px solid #f8f9fa;
+    transition: all 0.2s ease;
+}
+
+.searchable-dropdown .dropdown-item:last-child {
+    border-bottom: none;
+}
+
+.searchable-dropdown .dropdown-item:hover {
+    background-color: #e3f2fd;
+    color: #1976d2;
+}
+
 /* Campaign Action Modal */
 .modal-small {
     max-width: 500px;
