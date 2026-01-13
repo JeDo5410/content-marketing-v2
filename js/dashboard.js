@@ -24,7 +24,7 @@ function renderSalesCampaignsTable(campaigns) {
     if (campaigns.length === 0) {
         tableBody.innerHTML = `
             <tr>
-                <td colspan="5" class="no-campaigns">No sales campaigns added yet. Click "Select a Campaign" to add one.</td>
+                <td colspan="4" class="no-campaigns">No sales campaigns added yet. Click "Search Campaign" to add one.</td>
             </tr>
         `;
         return;
@@ -41,7 +41,6 @@ function renderSalesCampaignsTable(campaigns) {
                 <td>${campaign.name}</td>
                 <td><span class="badge ${channelBadgeClass}">${campaign.channel}</span></td>
                 <td>${platforms}</td>
-                <td>$${campaign.totalBudget.toLocaleString()}</td>
             </tr>
         `;
     }).join('');
@@ -64,7 +63,7 @@ function renderMarketingCampaignsTable(campaigns) {
     if (campaigns.length === 0) {
         tableBody.innerHTML = `
             <tr>
-                <td colspan="5" class="no-campaigns">No marketing campaigns added yet. Click "Select a Campaign" to add one.</td>
+                <td colspan="4" class="no-campaigns">No marketing campaigns added yet. Click "Search Campaign" to add one.</td>
             </tr>
         `;
         return;
@@ -88,7 +87,6 @@ function renderMarketingCampaignsTable(campaigns) {
                 <td>${salesCampaign.name}</td>
                 <td><span class="badge ${channelBadgeClass}">${salesCampaign.channel}</span></td>
                 <td>${platforms}</td>
-                <td>$${salesCampaign.totalBudget.toLocaleString()}</td>
             </tr>
         `;
     }).join('');
@@ -189,6 +187,14 @@ function attachEventListeners() {
     // Select Campaign button
     const selectCampaignBtn = document.getElementById('sweepCampaignBtn');
     selectCampaignBtn.addEventListener('click', openModal);
+
+    // Filters toggle button
+    const filtersToggle = document.getElementById('filtersToggle');
+    const filtersSidebar = document.getElementById('filtersSidebar');
+
+    filtersToggle.addEventListener('click', () => {
+        filtersSidebar.classList.toggle('collapsed');
+    });
 }
 
 // Refresh dashboard (called after adding new campaigns)

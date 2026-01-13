@@ -36,65 +36,69 @@
                         <p class="dashboard-subtitle">Manage your marketing campaigns and strategies.</p>
                     </div>
                     <div class="col-md-4 text-end">
-                        <button class="btn-primary" id="sweepCampaignBtn">+ Select a Campaign</button>
+                        <button class="btn-primary" id="sweepCampaignBtn">🔍 Search Campaign</button>
                     </div>
                 </div>
             </div>
         </header>
 
-        <!-- Filters Section -->
-        <section class="filters-section">
-            <div class="container-fluid">
-                <div class="filters-container">
-                    <div class="filter-group">
-                        <span class="filter-label">FILTER:</span>
-
-                        <div class="filter-checkboxes">
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="channel" value="Digital" class="channel-filter">
-                                <span>Digital</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="channel" value="Offline" class="channel-filter">
-                                <span>Offline</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="channel" value="Database" class="channel-filter">
-                                <span>Database</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="channel" value="Alliance" class="channel-filter">
-                                <span>Alliance</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="filter-group">
-                        <span class="filter-label">PLATFORM:</span>
-
-                        <div class="filter-checkboxes">
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="platform" value="TikTok" class="platform-filter">
-                                <span>TikTok</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="platform" value="Facebook" class="platform-filter">
-                                <span>Facebook</span>
-                            </label>
-                            <label class="checkbox-label">
-                                <input type="checkbox" name="platform" value="Instagram" class="platform-filter">
-                                <span>Instagram</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Recent Campaigns Section -->
+        <!-- Campaigns and Filters Section -->
         <section class="campaigns-section">
             <div class="container-fluid">
-                <h2 class="section-title">Recent Campaigns</h2>
+                <div class="campaigns-layout">
+                    <!-- Filters Sidebar -->
+                    <aside class="filters-sidebar" id="filtersSidebar">
+                        <div class="filters-header">
+                            <h3 class="filters-title">Filters</h3>
+                            <button class="filters-toggle" id="filtersToggle">◀</button>
+                        </div>
+
+                        <div class="filters-body">
+                            <div class="filter-group-vertical">
+                                <span class="filter-label-vertical">CHANNEL</span>
+                                <div class="filter-checkboxes-vertical">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="channel" value="Digital" class="channel-filter">
+                                        <span>Digital</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="channel" value="Offline" class="channel-filter">
+                                        <span>Offline</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="channel" value="Database" class="channel-filter">
+                                        <span>Database</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="channel" value="Alliance" class="channel-filter">
+                                        <span>Alliance</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="filter-group-vertical">
+                                <span class="filter-label-vertical">PLATFORM</span>
+                                <div class="filter-checkboxes-vertical">
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="platform" value="TikTok" class="platform-filter">
+                                        <span>TikTok</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="platform" value="Facebook" class="platform-filter">
+                                        <span>Facebook</span>
+                                    </label>
+                                    <label class="checkbox-label">
+                                        <input type="checkbox" name="platform" value="Instagram" class="platform-filter">
+                                        <span>Instagram</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+
+                    <!-- Campaigns Content -->
+                    <div class="campaigns-content">
+                        <h2 class="section-title">Recent Campaigns</h2>
 
                 <!-- Sales Campaigns Collapsible -->
                 <div class="collapsible-section">
@@ -112,7 +116,6 @@
                                         <th>Name</th>
                                         <th>Channel</th>
                                         <th>Platform</th>
-                                        <th>Budget</th>
                                     </tr>
                                 </thead>
                                 <tbody id="salesCampaignsTable">
@@ -139,7 +142,6 @@
                                         <th>Name</th>
                                         <th>Channel</th>
                                         <th>Platform</th>
-                                        <th>Budget</th>
                                     </tr>
                                 </thead>
                                 <tbody id="marketingCampaignsTable">
@@ -147,6 +149,8 @@
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
                     </div>
                 </div>
             </div>

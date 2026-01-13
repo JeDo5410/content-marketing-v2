@@ -1,6 +1,7 @@
 // Modal state
 let currentStep = 'type-selection';
 let currentCampaignType = null;
+let selectedCampaignId = null;
 
 // Open modal
 function openModal() {
@@ -111,7 +112,8 @@ function showSalesCampaignSelector() {
 
             <div class="form-actions">
                 <button type="button" class="btn btn-secondary" onclick="showCampaignTypeSelection()">Back</button>
-                <button type="submit" class="btn btn-submit">Add to Dashboard</button>
+                <button type="button" class="btn btn-canvas" onclick="navigateToCanvasFromModal()">💡 Solution Marketing Canvas</button>
+                <button type="button" class="btn btn-content" onclick="navigateToContentCreationFromModal()">✨ Content Creation</button>
             </div>
         </form>
     `;
@@ -159,7 +161,8 @@ function showMarketingCampaignSelector() {
 
             <div class="form-actions">
                 <button type="button" class="btn btn-secondary" onclick="showCampaignTypeSelection()">Back</button>
-                <button type="submit" class="btn btn-submit">Add to Dashboard</button>
+                <button type="button" class="btn btn-canvas" onclick="navigateToCanvasFromModal()">💡 Solution Marketing Canvas</button>
+                <button type="button" class="btn btn-content" onclick="navigateToContentCreationFromModal()">✨ Content Creation</button>
             </div>
         </form>
     `;
@@ -169,8 +172,12 @@ function showMarketingCampaignSelector() {
 function showCampaignPreview(campaignId, type) {
     if (!campaignId) {
         document.getElementById('campaignPreview').style.display = 'none';
+        selectedCampaignId = null;
         return;
     }
+
+    // Store the selected campaign ID
+    selectedCampaignId = campaignId;
 
     const previewDiv = document.getElementById('campaignPreview');
     const contentDiv = document.getElementById('previewContent');
@@ -261,6 +268,43 @@ function handleMarketingCampaignSelect(event) {
     } else {
         alert('Failed to add campaign. It may already be on the dashboard.');
     }
+}
+
+// Navigate to Canvas from modal
+function navigateToCanvasFromModal() {
+    if (!selectedCampaignId) {
+        alert('Please select a campaign first');
+        return;
+    }
+
+    // Add campaign to dashboard first
+    if (currentCampaignType === 'sales') {
+        addSalesCampaignToDashboard(selectedCampaignId);
+    } else if (currentCampaignType === 'marketing') {
+        addMarketingCampaignToDashboard(selectedCampaignId);
+    }
+
+    // Navigate to canvas page
+    window.location.href = `solution-marketing-canvas.html?campaign=${encodeURIComponent(selectedCampaignId)}`;
+}
+
+// Navigate to Content Creation from modal
+function navigateToContentCreationFromModal() {
+    if (!selectedCampaignId) {
+        alert('Please select a campaign first');
+        return;
+    }
+
+    // Add campaign to dashboard first
+    if (currentCampaignType === 'sales') {
+        addSalesCampaignToDashboard(selectedCampaignId);
+    } else if (currentCampaignType === 'marketing') {
+        addMarketingCampaignToDashboard(selectedCampaignId);
+    }
+
+    // Navigate to content creation page (placeholder for now)
+    alert('Content Creation page coming soon!');
+    closeModal();
 }
 
 // Attach close button listener
