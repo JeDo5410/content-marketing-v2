@@ -32,6 +32,110 @@
     margin-top: 30px;
 }
 
+/* Progress Tracker Section */
+.progress-section {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
+.progress-tracker {
+    background: white;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.progress-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #7f8c8d;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.progress-count {
+    font-size: 13px;
+    font-weight: 600;
+    color: #B3A125;
+}
+
+.progress-bar-container {
+    height: 8px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 24px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 100%;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #27ae60 0%, #229954 100%);
+    transition: width 0.5s ease;
+    border-radius: 4px;
+}
+
+.asset-indicators {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.indicator-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.indicator-item.completed {
+    background-color: #f0f8f0;
+    border-color: #27ae60;
+}
+
+.indicator-item.pending {
+    background-color: #f8f9fa;
+    border-color: #dfe6e9;
+}
+
+.indicator-icon {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.indicator-item.completed .indicator-icon {
+    color: #27ae60;
+}
+
+.indicator-item.pending .indicator-icon {
+    color: #95a5a6;
+}
+
+.indicator-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #2c3e50;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
 /* Asset Selection */
 .asset-selection {
     margin-bottom: 30px;
@@ -438,7 +542,31 @@
     }
 }
 
+@media (max-width: 768px) {
+    .progress-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .asset-indicators {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
 @media (max-width: 576px) {
+    .progress-tracker {
+        padding: 16px;
+    }
+
+    .progress-title {
+        font-size: 12px;
+    }
+
+    .asset-indicators {
+        grid-template-columns: 1fr;
+    }
+
     .asset-selection .col-md-6 {
         width: 100%;
     }

@@ -297,6 +297,8 @@ function initContentGenerator() {
 
     if (campaignId) {
         updateCampaignHeader(campaignId);
+        // Initialize progress tracker
+        syncProgressWithContent();
     }
 }
 
@@ -444,6 +446,9 @@ function generateContent() {
         if (saveContentToLocalStorage()) {
             showAutoSaveNotification();
         }
+
+        // Mark asset as completed in progress tracker
+        markAssetCompleted(selectedAssetType);
     }, 2000);
 }
 
@@ -635,6 +640,9 @@ function regenerateContent() {
     // Clear saved content before regenerating
     clearContentFromLocalStorage(selectedAssetType);
 
+    // Remove from progress tracker
+    removeAssetFromProgress(selectedAssetType);
+
     // Reset edit mode and A/B test
     isEditMode = false;
     abTestEnabled = false;
@@ -793,4 +801,135 @@ function showAutoSaveNotification() {
             notification.remove();
         }, 300);
     }, 1500);
+}
+
+// ===== Progress Tracking Functions =====
+
+// Get campaign progress from localStorage
+function getCampaignProgress() {
+    if (!campaignId) return null;
+
+    const progressKey = `progress_${campaignId}`;
+    const savedProgress = localStorage.getItem(progressKey);
+
+    if (!savedProgress) return {
+        completedAssets: [],
+        totalAssets: 4
+    };
+
+    try {
+        return JSON.parse(savedProgress);
+    } catch (e) {
+        console.error('Failed to parse campaign progress:', e);
+        return { completedAssets: [], totalAssets: 4 };
+    }
+}
+
+// Save campaign progress to localStorage
+function saveCampaignProgress(completedAssets) {
+    if (!campaignId) return;
+
+    const progressKey = `progress_${campaignId}`;
+    const progressData = {
+        completedAssets: completedAssets,
+        totalAssets: 4,
+        lastUpdated: new Date().toISOString()
+    };
+
+    try {
+        localStorage.setItem(progressKey, JSON.stringify(progressData));
+    } catch (e) {
+        console.error('Failed to save progress:', e);
+    }
+}
+
+// Update progress display
+function updateProgressDisplay() {
+    if (!campaignId) return;
+
+    const progress = getCampaignProgress();
+    const completedCount = progress.completedAssets.length;
+    const totalCount = progress.totalAssets;
+    const percentage = (completedCount / totalCount) * 100;
+
+    // Update progress bar
+    const progressFill = document.getElementById('progressFill');
+    const progressCount = document.getElementById('progressCount');
+
+    if (progressFill) {
+        progressFill.style.width = `${percentage}%`;
+    }
+
+    if (progressCount) {
+        progressCount.textContent = `${completedCount} of ${totalCount} assets completed`;
+    }
+
+    // Update asset indicators
+    const allAssetTypes = ['single-image', 'email-copy', 'carousel', 'landing-page'];
+
+    allAssetTypes.forEach(assetType => {
+        const indicator = document.getElementById(`indicator-${assetType}`);
+        if (!indicator) return;
+
+        const isCompleted = progress.completedAssets.includes(assetType);
+        const icon = indicator.querySelector('.indicator-icon');
+
+        if (isCompleted) {
+            indicator.classList.remove('pending');
+            indicator.classList.add('completed');
+            if (icon) icon.textContent = '✓';
+        } else {
+            indicator.classList.remove('completed');
+            indicator.classList.add('pending');
+            if (icon) icon.textContent = '○';
+        }
+    });
+}
+
+// Mark asset as completed
+function markAssetCompleted(assetType) {
+    if (!campaignId || !assetType) return;
+
+    const progress = getCampaignProgress();
+
+    // Add to completed list if not already there
+    if (!progress.completedAssets.includes(assetType)) {
+        progress.completedAssets.push(assetType);
+        saveCampaignProgress(progress.completedAssets);
+        updateProgressDisplay();
+    }
+}
+
+// Check all assets and update progress based on localStorage content
+function syncProgressWithContent() {
+    if (!campaignId) return;
+
+    const allAssetTypes = ['single-image', 'email-copy', 'carousel', 'landing-page'];
+    const completedAssets = [];
+
+    // Check which assets have saved content
+    allAssetTypes.forEach(assetType => {
+        const content = loadContentFromLocalStorage(assetType);
+        if (content && content.originalContent) {
+            completedAssets.push(assetType);
+        }
+    });
+
+    // Save and update display
+    saveCampaignProgress(completedAssets);
+    updateProgressDisplay();
+}
+
+// Remove asset from progress (when content is cleared)
+function removeAssetFromProgress(assetType) {
+    if (!campaignId || !assetType) return;
+
+    const progress = getCampaignProgress();
+    const index = progress.completedAssets.indexOf(assetType);
+
+    if (index > -1) {
+        progress.completedAssets.splice(index, 1);
+        saveCampaignProgress(progress.completedAssets);
+        updateProgressDisplay();
+    }
 }
