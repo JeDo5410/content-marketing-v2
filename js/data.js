@@ -1,82 +1,33 @@
-// Campaign Data Storage
-let salesCampaigns = [
+// Available Campaigns (existing in other systems that can be selected)
+const availableSalesCampaigns = [
     {
         id: 'sc-001',
-        code: 'SC-DG-TT-250801-TTPaidAd-MY-WSD-SE',
-        name: 'Sales Campaign: SC-DG-TT-250801-TTPaidAd-MY-WSD-SE',
+        code: 'DG-TT-250801-TTPaidAd-MY-WIM-SE',
+        name: 'TikTok Paid Ad Campaign for WIMSE-Aug',
         solution: 'WIM SE',
         solutionDescription: 'A work-integrated postgraduate solution designed to prepare learners for AI Application Developer roles through hands-on learning and paid industry experience.',
         channel: 'Digital',
         platforms: ['TikTok'],
         campaignObjective: 'Lead Generation',
+        eventName: 'HR Conference',
+        eventLocation: 'Kuala Lumpur',
+        databaseSource: 'Apollo, Hubspot, Chimpmail',
+        databaseSize: 2000,
+        typeOfAlliance: 'Agent, Influencer',
+        partnerName: 'John Doe',
+        companyName: 'Tesla',
         country: 'Malaysia, Philippines, Indonesia',
         startDate: '2025-08-01',
         endDate: '2025-08-01',
         totalBudget: 500
-    },
-    {
-        id: 'sc-002',
-        code: 'SC-DG-FB-250801-FBPaidAd-SG-WSD-SE',
-        name: 'Sales Campaign: SC-DG-FB-250801-FBPaidAd-SG-WSD-SE',
-        solution: 'Web Development Bootcamp',
-        solutionDescription: 'Intensive 12-week bootcamp covering full-stack web development with React and Node.js.',
-        channel: 'Digital',
-        platforms: ['Facebook', 'Instagram'],
-        campaignObjective: 'Brand Awareness',
-        country: 'Singapore',
-        startDate: '2025-08-01',
-        endDate: '2025-10-01',
-        totalBudget: 1200
-    },
-    {
-        id: 'sc-003',
-        code: 'SC-OF-250901-HRConf-KL-DataSci',
-        name: 'Sales Campaign: SC-OF-250901-HRConf-KL-DataSci',
-        solution: 'Data Science Professional',
-        solutionDescription: 'Advanced data science program with industry certifications and capstone projects.',
-        channel: 'Offline',
-        eventName: 'HR Conference',
-        eventLocation: 'Kuala Lumpur',
-        country: 'Malaysia',
-        startDate: '2025-09-01',
-        endDate: '2025-09-03',
-        totalBudget: 800
-    },
-    {
-        id: 'sc-004',
-        code: 'SC-DB-251001-Apollo-CyberSec',
-        name: 'Sales Campaign: SC-DB-251001-Apollo-CyberSec',
-        solution: 'Cybersecurity Specialist',
-        solutionDescription: 'Comprehensive cybersecurity training with hands-on labs and certification prep.',
-        channel: 'Database',
-        databaseSource: 'Apollo, Hubspot, Chimpmail',
-        databaseSize: 2000,
-        country: 'Malaysia, Singapore',
-        startDate: '2025-10-01',
-        endDate: '2025-10-31',
-        totalBudget: 300
-    },
-    {
-        id: 'sc-005',
-        code: 'SC-AL-251101-Agent-CloudArch',
-        name: 'Sales Campaign: SC-AL-251101-Agent-CloudArch',
-        solution: 'Cloud Architecture',
-        solutionDescription: 'Enterprise cloud architecture program covering AWS, Azure, and GCP.',
-        channel: 'Alliance',
-        typeOfAlliance: 'Agent, Influencer',
-        partnerName: 'John Doe',
-        companyName: 'Tesla',
-        country: 'Philippines',
-        startDate: '2025-11-01',
-        endDate: '2025-12-31',
-        totalBudget: 1500
     }
 ];
 
-let marketingCampaigns = [
+const availableMarketingCampaigns = [
     {
-        id: 'mc-001',
-        salesCampaignCode: 'SC-DG-TT-250801-TTPaidAd-MY-WSD-SE',
+        id: 'DG-TT-250801-TTPaidAd-MY-WIM-SE',
+        salesCampaignCode: 'DG-TT-250801-TTPaidAd-MY-WIM-SE',
+        campaignName: 'Marketing Campaign: MC-DG-TT-250801-TTPaidAd-MY-WIM-SE',
         actualPlatform: 'TikTok',
         campaignObjective: 'Awareness',
         funnelStage: 'Top of Funnel',
@@ -87,61 +38,54 @@ let marketingCampaigns = [
         demographics: 'Age: 21–35',
         exclusions: 'Existing leads (CRM custom audience)',
         primaryCTA: 'Learn More'
-    },
-    {
-        id: 'mc-002',
-        salesCampaignCode: 'SC-DG-FB-250801-FBPaidAd-SG-WSD-SE',
-        actualPlatform: 'Facebook',
-        campaignObjective: 'Conversion',
-        funnelStage: 'Bottom of Funnel',
-        milestone: 'M3 – Conversion',
-        audienceType: 'Job seekers, recent graduates',
-        targetingApproach: 'Lookalike & retargeting',
-        interests: 'Web development, coding bootcamps, tech careers',
-        demographics: 'Age: 22–30',
-        exclusions: 'Current students',
-        primaryCTA: 'Apply Now'
-    },
-    {
-        id: 'mc-003',
-        salesCampaignCode: 'SC-DB-251001-Apollo-CyberSec',
-        actualPlatform: 'TikTok',
-        campaignObjective: 'Engagement',
-        funnelStage: 'Middle of Funnel',
-        milestone: 'M2 – Lead Nurturing',
-        audienceType: 'IT professionals, career changers',
-        targetingApproach: 'Database targeting',
-        interests: 'Cybersecurity, information security, ethical hacking',
-        demographics: 'Age: 25–40',
-        exclusions: 'Competitors',
-        primaryCTA: 'Download Guide'
     }
 ];
 
+// Selected Campaigns (campaigns added to the dashboard)
+let selectedSalesCampaigns = [];
+let selectedMarketingCampaigns = [];
+
 // Helper function to get sales campaign by code
 function getSalesCampaignByCode(code) {
-    return salesCampaigns.find(campaign => campaign.code === code);
+    return availableSalesCampaigns.find(campaign => campaign.code === code);
 }
 
-// Helper function to get marketing campaigns by sales campaign code
-function getMarketingCampaignsBySalesCode(code) {
-    return marketingCampaigns.filter(campaign => campaign.salesCampaignCode === code);
+// Helper function to get available sales campaigns
+function getAvailableSalesCampaigns() {
+    // Return campaigns that haven't been selected yet
+    return availableSalesCampaigns.filter(campaign =>
+        !selectedSalesCampaigns.find(selected => selected.code === campaign.code)
+    );
 }
 
-// Helper function to add new sales campaign
-function addSalesCampaign(campaign) {
-    campaign.id = 'sc-' + (salesCampaigns.length + 1).toString().padStart(3, '0');
-    salesCampaigns.push(campaign);
-    saveToLocalStorage();
-    return campaign;
+// Helper function to get available marketing campaigns
+function getAvailableMarketingCampaigns() {
+    // Return campaigns that haven't been selected yet
+    return availableMarketingCampaigns.filter(campaign =>
+        !selectedMarketingCampaigns.find(selected => selected.id === campaign.id)
+    );
 }
 
-// Helper function to add new marketing campaign
-function addMarketingCampaign(campaign) {
-    campaign.id = 'mc-' + (marketingCampaigns.length + 1).toString().padStart(3, '0');
-    marketingCampaigns.push(campaign);
-    saveToLocalStorage();
-    return campaign;
+// Helper function to add sales campaign to dashboard
+function addSalesCampaignToDashboard(campaignId) {
+    const campaign = availableSalesCampaigns.find(c => c.id === campaignId);
+    if (campaign && !selectedSalesCampaigns.find(c => c.id === campaignId)) {
+        selectedSalesCampaigns.push(campaign);
+        saveToLocalStorage();
+        return true;
+    }
+    return false;
+}
+
+// Helper function to add marketing campaign to dashboard
+function addMarketingCampaignToDashboard(campaignId) {
+    const campaign = availableMarketingCampaigns.find(c => c.id === campaignId);
+    if (campaign && !selectedMarketingCampaigns.find(c => c.id === campaignId)) {
+        selectedMarketingCampaigns.push(campaign);
+        saveToLocalStorage();
+        return true;
+    }
+    return false;
 }
 
 // Helper function to get platforms as string
@@ -160,19 +104,19 @@ function getPlatformsString(campaign) {
 
 // Local Storage functions
 function saveToLocalStorage() {
-    localStorage.setItem('salesCampaigns', JSON.stringify(salesCampaigns));
-    localStorage.setItem('marketingCampaigns', JSON.stringify(marketingCampaigns));
+    localStorage.setItem('selectedSalesCampaigns', JSON.stringify(selectedSalesCampaigns));
+    localStorage.setItem('selectedMarketingCampaigns', JSON.stringify(selectedMarketingCampaigns));
 }
 
 function loadFromLocalStorage() {
-    const savedSales = localStorage.getItem('salesCampaigns');
-    const savedMarketing = localStorage.getItem('marketingCampaigns');
+    const savedSales = localStorage.getItem('selectedSalesCampaigns');
+    const savedMarketing = localStorage.getItem('selectedMarketingCampaigns');
 
     if (savedSales) {
-        salesCampaigns = JSON.parse(savedSales);
+        selectedSalesCampaigns = JSON.parse(savedSales);
     }
     if (savedMarketing) {
-        marketingCampaigns = JSON.parse(savedMarketing);
+        selectedMarketingCampaigns = JSON.parse(savedMarketing);
     }
 }
 

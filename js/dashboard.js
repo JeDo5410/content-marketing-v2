@@ -6,19 +6,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Initialize dashboard
 function initDashboard() {
-    updateStatistics();
-    renderSalesCampaignsTable(salesCampaigns);
-    renderMarketingCampaignsTable(marketingCampaigns);
+    updateCampaignCounts();
+    renderSalesCampaignsTable(selectedSalesCampaigns);
+    renderMarketingCampaignsTable(selectedMarketingCampaigns);
 }
 
-// Update statistics cards
-function updateStatistics() {
-    const totalCampaigns = salesCampaigns.length + marketingCampaigns.length;
-    document.getElementById('activeCampaigns').textContent = totalCampaigns;
-
-    // Update campaign counts in collapsible headers
-    document.getElementById('salesCount').textContent = `(${salesCampaigns.length})`;
-    document.getElementById('marketingCount').textContent = `(${marketingCampaigns.length})`;
+// Update campaign counts
+function updateCampaignCounts() {
+    document.getElementById('salesCount').textContent = `(${selectedSalesCampaigns.length})`;
+    document.getElementById('marketingCount').textContent = `(${selectedMarketingCampaigns.length})`;
 }
 
 // Render Sales Campaigns Table
@@ -28,7 +24,7 @@ function renderSalesCampaignsTable(campaigns) {
     if (campaigns.length === 0) {
         tableBody.innerHTML = `
             <tr>
-                <td colspan="5" class="no-campaigns">No sales campaigns found</td>
+                <td colspan="5" class="no-campaigns">No sales campaigns added yet. Click "Select a Campaign" to add one.</td>
             </tr>
         `;
         return;
@@ -59,7 +55,7 @@ function renderMarketingCampaignsTable(campaigns) {
     if (campaigns.length === 0) {
         tableBody.innerHTML = `
             <tr>
-                <td colspan="5" class="no-campaigns">No marketing campaigns found</td>
+                <td colspan="5" class="no-campaigns">No marketing campaigns added yet. Click "Select a Campaign" to add one.</td>
             </tr>
         `;
         return;
@@ -96,9 +92,9 @@ function filterCampaigns() {
     const selectedPlatforms = getSelectedFilters('platform-filter');
 
     // Filter sales campaigns
-    let filteredSales = salesCampaigns;
+    let filteredSales = selectedSalesCampaigns;
     if (selectedChannels.length > 0 || selectedPlatforms.length > 0) {
-        filteredSales = salesCampaigns.filter(campaign => {
+        filteredSales = selectedSalesCampaigns.filter(campaign => {
             const channelMatch = selectedChannels.length === 0 || selectedChannels.includes(campaign.channel);
             let platformMatch = selectedPlatforms.length === 0;
 
@@ -113,9 +109,9 @@ function filterCampaigns() {
     }
 
     // Filter marketing campaigns based on their linked sales campaigns
-    let filteredMarketing = marketingCampaigns;
+    let filteredMarketing = selectedMarketingCampaigns;
     if (selectedChannels.length > 0 || selectedPlatforms.length > 0) {
-        filteredMarketing = marketingCampaigns.filter(campaign => {
+        filteredMarketing = selectedMarketingCampaigns.filter(campaign => {
             const salesCampaign = getSalesCampaignByCode(campaign.salesCampaignCode);
             if (!salesCampaign) return false;
 
@@ -172,13 +168,13 @@ function attachEventListeners() {
         header.addEventListener('click', () => toggleCollapsible(header));
     });
 
-    // Sweep Campaign button
-    const sweepCampaignBtn = document.getElementById('sweepCampaignBtn');
-    sweepCampaignBtn.addEventListener('click', openModal);
+    // Select Campaign button
+    const selectCampaignBtn = document.getElementById('sweepCampaignBtn');
+    selectCampaignBtn.addEventListener('click', openModal);
 }
 
 // Refresh dashboard (called after adding new campaigns)
 function refreshDashboard() {
-    updateStatistics();
+    updateCampaignCounts();
     filterCampaigns(); // This will re-render tables with current filters
 }

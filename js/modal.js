@@ -47,12 +47,12 @@ function showCampaignTypeSelection() {
             <div class="campaign-type-card" onclick="selectCampaignType('sales')">
                 <div class="campaign-type-icon">📊</div>
                 <div class="campaign-type-title">Sales Campaign</div>
-                <div class="campaign-type-description">Create a new sales campaign with channel-specific details</div>
+                <div class="campaign-type-description">Add an existing sales campaign to your dashboard</div>
             </div>
             <div class="campaign-type-card" onclick="selectCampaignType('marketing')">
                 <div class="campaign-type-icon">🎯</div>
                 <div class="campaign-type-title">Marketing Campaign</div>
-                <div class="campaign-type-description">Add a marketing campaign linked to an existing sales campaign</div>
+                <div class="campaign-type-description">Add an existing marketing campaign to your dashboard</div>
             </div>
         </div>
     `;
@@ -63,401 +63,204 @@ function selectCampaignType(type) {
     currentCampaignType = type;
 
     if (type === 'sales') {
-        showSalesCampaignForm();
+        showSalesCampaignSelector();
     } else if (type === 'marketing') {
-        showMarketingCampaignForm();
+        showMarketingCampaignSelector();
     }
 }
 
-// Show Sales Campaign Form
-function showSalesCampaignForm() {
+// Show Sales Campaign Selector
+function showSalesCampaignSelector() {
     const modalTitle = document.getElementById('modalTitle');
     const modalBody = document.getElementById('modalBody');
 
-    modalTitle.textContent = 'Add Sales Campaign';
+    modalTitle.textContent = 'Select Sales Campaign';
 
-    modalBody.innerHTML = `
-        <form class="campaign-form" id="salesCampaignForm" onsubmit="handleSalesCampaignSubmit(event)">
-            <div class="form-group">
-                <label class="form-label required">Sales Campaign Code</label>
-                <input type="text" class="form-input" name="code" required placeholder="e.g., SC-DG-TT-250801">
+    const availableCampaigns = getAvailableSalesCampaigns();
+
+    if (availableCampaigns.length === 0) {
+        modalBody.innerHTML = `
+            <div style="text-align: center; padding: 40px;">
+                <p style="color: #7f8c8d; margin-bottom: 20px;">No sales campaigns available to add.</p>
+                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
             </div>
-
-            <div class="form-group">
-                <label class="form-label required">Campaign Name</label>
-                <input type="text" class="form-input" name="name" required placeholder="Enter campaign name">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label required">Solution</label>
-                <input type="text" class="form-input" name="solution" required placeholder="e.g., WIM SE">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label required">Solution Description</label>
-                <textarea class="form-textarea" name="solutionDescription" required placeholder="Describe the solution"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label required">Channel</label>
-                <select class="form-select" name="channel" required onchange="handleChannelChange(this.value)">
-                    <option value="">Select channel</option>
-                    <option value="Digital">Digital</option>
-                    <option value="Offline">Offline</option>
-                    <option value="Database">Database</option>
-                    <option value="Alliance">Alliance</option>
-                </select>
-            </div>
-
-            <!-- Conditional Fields -->
-            <div class="conditional-field" id="digitalFields">
-                <div class="form-group">
-                    <label class="form-label">Social Media Platforms</label>
-                    <div class="form-checkboxes">
-                        <label class="form-checkbox-label">
-                            <input type="checkbox" name="platforms" value="TikTok">
-                            <span>TikTok</span>
-                        </label>
-                        <label class="form-checkbox-label">
-                            <input type="checkbox" name="platforms" value="Facebook">
-                            <span>Facebook</span>
-                        </label>
-                        <label class="form-checkbox-label">
-                            <input type="checkbox" name="platforms" value="Instagram">
-                            <span>Instagram</span>
-                        </label>
-                        <label class="form-checkbox-label">
-                            <input type="checkbox" name="platforms" value="LinkedIn">
-                            <span>LinkedIn</span>
-                        </label>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Campaign Objective</label>
-                    <input type="text" class="form-input" name="campaignObjective" placeholder="e.g., Lead Generation">
-                </div>
-            </div>
-
-            <div class="conditional-field" id="offlineFields">
-                <div class="form-group">
-                    <label class="form-label required">Event Name</label>
-                    <input type="text" class="form-input" name="eventName" placeholder="e.g., HR Conference">
-                </div>
-                <div class="form-group">
-                    <label class="form-label required">Event Location</label>
-                    <input type="text" class="form-input" name="eventLocation" placeholder="e.g., Kuala Lumpur">
-                </div>
-            </div>
-
-            <div class="conditional-field" id="databaseFields">
-                <div class="form-group">
-                    <label class="form-label required">Database Source</label>
-                    <input type="text" class="form-input" name="databaseSource" placeholder="e.g., Apollo, Hubspot">
-                </div>
-                <div class="form-group">
-                    <label class="form-label required">Database Size</label>
-                    <input type="number" class="form-input" name="databaseSize" placeholder="e.g., 2000">
-                </div>
-            </div>
-
-            <div class="conditional-field" id="allianceFields">
-                <div class="form-group">
-                    <label class="form-label required">Type of Alliance</label>
-                    <input type="text" class="form-input" name="typeOfAlliance" placeholder="e.g., Agent, Influencer">
-                </div>
-                <div class="form-group">
-                    <label class="form-label required">Partner Name</label>
-                    <input type="text" class="form-input" name="partnerName" placeholder="e.g., John Doe">
-                </div>
-                <div class="form-group">
-                    <label class="form-label required">Company Name</label>
-                    <input type="text" class="form-input" name="companyName" placeholder="e.g., Tesla">
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label required">Country</label>
-                <input type="text" class="form-input" name="country" required placeholder="e.g., Malaysia, Singapore">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label required">Campaign Start Date</label>
-                <input type="date" class="form-input" name="startDate" required>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label required">Campaign End Date</label>
-                <input type="date" class="form-input" name="endDate" required>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label required">Total Budget ($)</label>
-                <input type="number" class="form-input" name="totalBudget" required placeholder="e.g., 500">
-            </div>
-
-            <div class="form-actions">
-                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                <button type="submit" class="btn btn-submit">Add Campaign</button>
-            </div>
-        </form>
-    `;
-}
-
-// Handle channel change
-function handleChannelChange(channel) {
-    // Hide all conditional fields
-    document.querySelectorAll('.conditional-field').forEach(field => {
-        field.classList.remove('active');
-    });
-
-    // Show relevant conditional field
-    if (channel === 'Digital') {
-        document.getElementById('digitalFields').classList.add('active');
-    } else if (channel === 'Offline') {
-        document.getElementById('offlineFields').classList.add('active');
-    } else if (channel === 'Database') {
-        document.getElementById('databaseFields').classList.add('active');
-    } else if (channel === 'Alliance') {
-        document.getElementById('allianceFields').classList.add('active');
-    }
-}
-
-// Show Marketing Campaign Form
-function showMarketingCampaignForm() {
-    const modalTitle = document.getElementById('modalTitle');
-    const modalBody = document.getElementById('modalBody');
-
-    modalTitle.textContent = 'Add Marketing Campaign';
-
-    modalBody.innerHTML = `
-        <form class="campaign-form" id="marketingCampaignForm" onsubmit="handleMarketingCampaignSubmit(event)">
-            <div class="form-group">
-                <label class="form-label required">Sales Campaign Code</label>
-                <input type="text" class="form-input" name="salesCampaignCode" required
-                       placeholder="e.g., SC-DG-TT-250801-TTPaidAd-MY-WSD-SE"
-                       onblur="fetchLinkedSalesCampaign(this.value)">
-                <small style="color: #7f8c8d;">Enter the code of the existing sales campaign to link</small>
-            </div>
-
-            <div id="linkedCampaignInfo" style="display: none; padding: 16px; background: #f8f9fa; border-radius: 8px; margin-bottom: 16px;">
-                <strong style="color: #27ae60;">✓ Linked Sales Campaign Found:</strong>
-                <div id="linkedCampaignDetails" style="margin-top: 8px; font-size: 14px; color: #2c3e50;"></div>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label required">Actual Platform Used</label>
-                <select class="form-select" name="actualPlatform" required>
-                    <option value="">Select platform</option>
-                    <option value="TikTok">TikTok</option>
-                    <option value="Facebook">Facebook</option>
-                    <option value="Instagram">Instagram</option>
-                    <option value="LinkedIn">LinkedIn</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label required">Campaign Objective</label>
-                <input type="text" class="form-input" name="campaignObjective" required placeholder="e.g., Awareness">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label required">Funnel Stage</label>
-                <select class="form-select" name="funnelStage" required>
-                    <option value="">Select funnel stage</option>
-                    <option value="Top of Funnel">Top of Funnel</option>
-                    <option value="Middle of Funnel">Middle of Funnel</option>
-                    <option value="Bottom of Funnel">Bottom of Funnel</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label required">Milestone</label>
-                <input type="text" class="form-input" name="milestone" required placeholder="e.g., M1 – Market Education">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label required">Audience Type</label>
-                <input type="text" class="form-input" name="audienceType" required placeholder="e.g., Early-career professionals">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label required">Targeting Approach</label>
-                <input type="text" class="form-input" name="targetingApproach" required placeholder="e.g., Interest & demographic-based">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label required">Interests</label>
-                <textarea class="form-textarea" name="interests" required placeholder="e.g., Online learning platforms"></textarea>
-            </div>
-
-            <div class="form-group">
-                <label class="form-label required">Demographics</label>
-                <input type="text" class="form-input" name="demographics" required placeholder="e.g., Age: 21–35">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label required">Exclusions</label>
-                <input type="text" class="form-input" name="exclusions" required placeholder="e.g., Existing leads">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label required">Primary CTA</label>
-                <input type="text" class="form-input" name="primaryCTA" required placeholder="e.g., Learn More">
-            </div>
-
-            <div class="form-actions">
-                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                <button type="submit" class="btn btn-submit">Add Campaign</button>
-            </div>
-        </form>
-    `;
-}
-
-// Fetch linked sales campaign (simulate fetching from backend)
-function fetchLinkedSalesCampaign(code) {
-    if (!code) return;
-
-    const salesCampaign = getSalesCampaignByCode(code);
-    const infoDiv = document.getElementById('linkedCampaignInfo');
-    const detailsDiv = document.getElementById('linkedCampaignDetails');
-
-    if (salesCampaign) {
-        infoDiv.style.display = 'block';
-        detailsDiv.innerHTML = `
-            <div><strong>Name:</strong> ${salesCampaign.name}</div>
-            <div><strong>Solution:</strong> ${salesCampaign.solution}</div>
-            <div><strong>Channel:</strong> ${salesCampaign.channel}</div>
-            <div><strong>Budget:</strong> $${salesCampaign.totalBudget.toLocaleString()}</div>
         `;
+        return;
+    }
+
+    modalBody.innerHTML = `
+        <form class="campaign-form" id="selectSalesForm" onsubmit="handleSalesCampaignSelect(event)">
+            <p style="color: #7f8c8d; margin-bottom: 20px; font-size: 14px;">
+                Select an existing sales campaign from the dropdown below. This campaign has already been created in the Sales Campaign system.
+            </p>
+
+            <div class="form-group">
+                <label class="form-label required">Select Campaign</label>
+                <select class="form-select" name="campaignId" required onchange="showCampaignPreview(this.value, 'sales')">
+                    <option value="">Choose a sales campaign...</option>
+                    ${availableCampaigns.map(campaign => `
+                        <option value="${campaign.id}">${campaign.code} - ${campaign.name}</option>
+                    `).join('')}
+                </select>
+            </div>
+
+            <div id="campaignPreview" style="display: none; padding: 20px; background: #f8f9fa; border-radius: 8px; margin: 20px 0;">
+                <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 12px; color: #2c3e50;">Campaign Details:</h4>
+                <div id="previewContent"></div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="showCampaignTypeSelection()">Back</button>
+                <button type="submit" class="btn btn-submit">Add to Dashboard</button>
+            </div>
+        </form>
+    `;
+}
+
+// Show Marketing Campaign Selector
+function showMarketingCampaignSelector() {
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+
+    modalTitle.textContent = 'Select Marketing Campaign';
+
+    const availableCampaigns = getAvailableMarketingCampaigns();
+
+    if (availableCampaigns.length === 0) {
+        modalBody.innerHTML = `
+            <div style="text-align: center; padding: 40px;">
+                <p style="color: #7f8c8d; margin-bottom: 20px;">No marketing campaigns available to add.</p>
+                <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+            </div>
+        `;
+        return;
+    }
+
+    modalBody.innerHTML = `
+        <form class="campaign-form" id="selectMarketingForm" onsubmit="handleMarketingCampaignSelect(event)">
+            <p style="color: #7f8c8d; margin-bottom: 20px; font-size: 14px;">
+                Select an existing marketing campaign from the dropdown below. This campaign has already been created in the Marketing Campaign system and is linked to a sales campaign.
+            </p>
+
+            <div class="form-group">
+                <label class="form-label required">Select Campaign</label>
+                <select class="form-select" name="campaignId" required onchange="showCampaignPreview(this.value, 'marketing')">
+                    <option value="">Choose a marketing campaign...</option>
+                    ${availableCampaigns.map(campaign => `
+                        <option value="${campaign.id}">${campaign.salesCampaignCode} - ${campaign.campaignName}</option>
+                    `).join('')}
+                </select>
+            </div>
+
+            <div id="campaignPreview" style="display: none; padding: 20px; background: #f8f9fa; border-radius: 8px; margin: 20px 0;">
+                <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 12px; color: #2c3e50;">Campaign Details:</h4>
+                <div id="previewContent"></div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="showCampaignTypeSelection()">Back</button>
+                <button type="submit" class="btn btn-submit">Add to Dashboard</button>
+            </div>
+        </form>
+    `;
+}
+
+// Show campaign preview when selected
+function showCampaignPreview(campaignId, type) {
+    if (!campaignId) {
+        document.getElementById('campaignPreview').style.display = 'none';
+        return;
+    }
+
+    const previewDiv = document.getElementById('campaignPreview');
+    const contentDiv = document.getElementById('previewContent');
+
+    if (type === 'sales') {
+        const campaign = availableSalesCampaigns.find(c => c.id === campaignId);
+        if (campaign) {
+            contentDiv.innerHTML = `
+                <div style="display: grid; gap: 10px; font-size: 14px;">
+                    <div><strong>Channel:</strong> <span class="badge badge-${campaign.channel.toLowerCase()}">${campaign.channel}</span></div>
+                    <div><strong>Social Media Platform:</strong> ${campaign.platforms ? campaign.platforms.join(', ') : 'N/A'}</div>
+                    <div><strong>Campaign Objective:</strong> ${campaign.campaignObjective || 'Awareness'}</div>
+                </div>
+            `;
+            previewDiv.style.display = 'block';
+        }
+    } else if (type === 'marketing') {
+        const campaign = availableMarketingCampaigns.find(c => c.id === campaignId);
+        if (campaign) {
+            const salesCampaign = getSalesCampaignByCode(campaign.salesCampaignCode);
+            contentDiv.innerHTML = `
+                <div style="display: grid; gap: 10px; font-size: 14px;">
+                    <div><strong>Channel:</strong> <span class="badge badge-${salesCampaign ? salesCampaign.channel.toLowerCase() : 'digital'}">${salesCampaign ? salesCampaign.channel : 'Digital'}</span></div>
+                    <div><strong>Social Media Platform:</strong> ${campaign.actualPlatform}</div>
+                    <div><strong>Campaign Objective:</strong> ${campaign.campaignObjective}</div>
+                </div>
+            `;
+            previewDiv.style.display = 'block';
+        }
+    }
+}
+
+// Handle Sales Campaign Selection
+function handleSalesCampaignSelect(event) {
+    event.preventDefault();
+
+    const form = event.target;
+    const formData = new FormData(form);
+    const campaignId = formData.get('campaignId');
+
+    if (!campaignId) {
+        alert('Please select a campaign');
+        return;
+    }
+
+    // Add campaign to dashboard
+    const success = addSalesCampaignToDashboard(campaignId);
+
+    if (success) {
+        // Refresh dashboard
+        refreshDashboard();
+
+        // Close modal
+        closeModal();
+
+        // Show success message
+        alert('Sales campaign added to dashboard successfully!');
     } else {
-        infoDiv.style.display = 'block';
-        infoDiv.style.background = '#fee';
-        detailsDiv.innerHTML = '<span style="color: #e74c3c;">Sales campaign not found. Please check the code.</span>';
+        alert('Failed to add campaign. It may already be on the dashboard.');
     }
 }
 
-// Handle Sales Campaign Form Submit
-function handleSalesCampaignSubmit(event) {
+// Handle Marketing Campaign Selection
+function handleMarketingCampaignSelect(event) {
     event.preventDefault();
 
     const form = event.target;
     const formData = new FormData(form);
+    const campaignId = formData.get('campaignId');
 
-    // Create campaign object
-    const campaign = {
-        code: formData.get('code'),
-        name: formData.get('name'),
-        solution: formData.get('solution'),
-        solutionDescription: formData.get('solutionDescription'),
-        channel: formData.get('channel'),
-        country: formData.get('country'),
-        startDate: formData.get('startDate'),
-        endDate: formData.get('endDate'),
-        totalBudget: parseFloat(formData.get('totalBudget'))
-    };
-
-    // Add channel-specific fields
-    if (campaign.channel === 'Digital') {
-        campaign.platforms = formData.getAll('platforms');
-        campaign.campaignObjective = formData.get('campaignObjective');
-    } else if (campaign.channel === 'Offline') {
-        campaign.eventName = formData.get('eventName');
-        campaign.eventLocation = formData.get('eventLocation');
-    } else if (campaign.channel === 'Database') {
-        campaign.databaseSource = formData.get('databaseSource');
-        campaign.databaseSize = parseInt(formData.get('databaseSize'));
-    } else if (campaign.channel === 'Alliance') {
-        campaign.typeOfAlliance = formData.get('typeOfAlliance');
-        campaign.partnerName = formData.get('partnerName');
-        campaign.companyName = formData.get('companyName');
-    }
-
-    // Validate
-    if (!validateSalesCampaign(campaign)) {
+    if (!campaignId) {
+        alert('Please select a campaign');
         return;
     }
 
-    // Add campaign
-    addSalesCampaign(campaign);
+    // Add campaign to dashboard
+    const success = addMarketingCampaignToDashboard(campaignId);
 
-    // Refresh dashboard
-    refreshDashboard();
+    if (success) {
+        // Refresh dashboard
+        refreshDashboard();
 
-    // Close modal
-    closeModal();
+        // Close modal
+        closeModal();
 
-    // Show success message
-    alert('Sales campaign added successfully!');
-}
-
-// Handle Marketing Campaign Form Submit
-function handleMarketingCampaignSubmit(event) {
-    event.preventDefault();
-
-    const form = event.target;
-    const formData = new FormData(form);
-
-    // Validate that sales campaign exists
-    const salesCampaignCode = formData.get('salesCampaignCode');
-    const linkedSalesCampaign = getSalesCampaignByCode(salesCampaignCode);
-
-    if (!linkedSalesCampaign) {
-        alert('Error: Sales campaign not found. Please check the code.');
-        return;
+        // Show success message
+        alert('Marketing campaign added to dashboard successfully!');
+    } else {
+        alert('Failed to add campaign. It may already be on the dashboard.');
     }
-
-    // Create campaign object
-    const campaign = {
-        salesCampaignCode: salesCampaignCode,
-        actualPlatform: formData.get('actualPlatform'),
-        campaignObjective: formData.get('campaignObjective'),
-        funnelStage: formData.get('funnelStage'),
-        milestone: formData.get('milestone'),
-        audienceType: formData.get('audienceType'),
-        targetingApproach: formData.get('targetingApproach'),
-        interests: formData.get('interests'),
-        demographics: formData.get('demographics'),
-        exclusions: formData.get('exclusions'),
-        primaryCTA: formData.get('primaryCTA')
-    };
-
-    // Add campaign
-    addMarketingCampaign(campaign);
-
-    // Refresh dashboard
-    refreshDashboard();
-
-    // Close modal
-    closeModal();
-
-    // Show success message
-    alert('Marketing campaign added successfully!');
-}
-
-// Validate Sales Campaign
-function validateSalesCampaign(campaign) {
-    // Check channel-specific required fields
-    if (campaign.channel === 'Digital' && (!campaign.platforms || campaign.platforms.length === 0)) {
-        alert('Please select at least one social media platform for Digital channel.');
-        return false;
-    }
-
-    if (campaign.channel === 'Offline' && (!campaign.eventName || !campaign.eventLocation)) {
-        alert('Please fill in Event Name and Event Location for Offline channel.');
-        return false;
-    }
-
-    if (campaign.channel === 'Database' && (!campaign.databaseSource || !campaign.databaseSize)) {
-        alert('Please fill in Database Source and Database Size for Database channel.');
-        return false;
-    }
-
-    if (campaign.channel === 'Alliance' && (!campaign.typeOfAlliance || !campaign.partnerName || !campaign.companyName)) {
-        alert('Please fill in all Alliance fields.');
-        return false;
-    }
-
-    return true;
 }
 
 // Attach close button listener
