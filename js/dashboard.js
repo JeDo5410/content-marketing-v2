@@ -1,4 +1,6 @@
 // Dashboard initialization
+let currentSelectedCampaignId = null;
+
 document.addEventListener('DOMContentLoaded', () => {
     initDashboard();
     attachEventListeners();
@@ -51,7 +53,7 @@ function renderSalesCampaignsTable(campaigns) {
     tableBody.querySelectorAll('.campaign-row').forEach(row => {
         row.addEventListener('click', () => {
             const campaignId = row.getAttribute('data-campaign-id');
-            navigateToCanvas(campaignId);
+            openCampaignActionModal(campaignId);
         });
     });
 }
@@ -97,7 +99,7 @@ function renderMarketingCampaignsTable(campaigns) {
     tableBody.querySelectorAll('.campaign-row').forEach(row => {
         row.addEventListener('click', () => {
             const campaignId = row.getAttribute('data-campaign-id');
-            navigateToCanvas(campaignId);
+            openCampaignActionModal(campaignId);
         });
     });
 }
@@ -195,6 +197,36 @@ function attachEventListeners() {
     filtersToggle.addEventListener('click', () => {
         filtersSidebar.classList.toggle('collapsed');
     });
+
+    // Campaign Action Modal
+    const campaignActionModal = document.getElementById('campaignActionModal');
+    const campaignActionClose = document.getElementById('campaignActionClose');
+    const goToCanvasBtn = document.getElementById('goToCanvas');
+    const goToContentGenBtn = document.getElementById('goToContentGen');
+
+    // Close campaign action modal
+    campaignActionClose.addEventListener('click', closeCampaignActionModal);
+
+    // Close on background click
+    campaignActionModal.addEventListener('click', (e) => {
+        if (e.target === campaignActionModal) {
+            closeCampaignActionModal();
+        }
+    });
+
+    // Navigate to Canvas
+    goToCanvasBtn.addEventListener('click', () => {
+        if (currentSelectedCampaignId) {
+            navigateToCanvas(currentSelectedCampaignId);
+        }
+    });
+
+    // Navigate to Content Generator
+    goToContentGenBtn.addEventListener('click', () => {
+        if (currentSelectedCampaignId) {
+            navigateToContentGenerator(currentSelectedCampaignId);
+        }
+    });
 }
 
 // Refresh dashboard (called after adding new campaigns)
@@ -203,7 +235,26 @@ function refreshDashboard() {
     filterCampaigns(); // This will re-render tables with current filters
 }
 
+// Open campaign action modal
+function openCampaignActionModal(campaignId) {
+    currentSelectedCampaignId = campaignId;
+    const campaignActionModal = document.getElementById('campaignActionModal');
+    campaignActionModal.classList.add('active');
+}
+
+// Close campaign action modal
+function closeCampaignActionModal() {
+    const campaignActionModal = document.getElementById('campaignActionModal');
+    campaignActionModal.classList.remove('active');
+    currentSelectedCampaignId = null;
+}
+
 // Navigate to canvas page
 function navigateToCanvas(campaignId) {
     window.location.href = `solution-marketing-canvas.html?campaign=${encodeURIComponent(campaignId)}`;
+}
+
+// Navigate to content generator page
+function navigateToContentGenerator(campaignId) {
+    window.location.href = `content-generator.html?campaign=${encodeURIComponent(campaignId)}`;
 }

@@ -679,6 +679,53 @@ body {
     background-color: #142d4f;
 }
 
+/* Campaign Action Modal */
+.modal-small {
+    max-width: 500px;
+}
+
+.action-selection {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.action-card {
+    width: 100%;
+    padding: 20px 24px;
+    border: 2px solid #e9ecef;
+    border-radius: 12px;
+    background-color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: left;
+}
+
+.action-card:hover {
+    border-color: #3498db;
+    background-color: #f8f9fa;
+    transform: translateX(4px);
+    box-shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+}
+
+.action-icon {
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.action-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 6px;
+}
+
+.action-description {
+    font-size: 13px;
+    color: #7f8c8d;
+    margin: 0;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .sidebar {
