@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solution Marketing Canvas - Content Creation</title>
+
+    <!-- Bootstrap CSS (Grid only) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/canvas.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">Content Creation</div>
+        </div>
+        <nav class="sidebar-nav">
+            <div class="nav-section-label">MAIN</div>
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">📊</span>
+                <span class="nav-text">Dashboard</span>
+            </a>
+
+            <div class="nav-section-label">CAMPAIGN</div>
+            <div class="nav-campaign-header" id="campaignHeader">
+                <span class="campaign-title">Sales Campaign: SC-DG-TT-25...</span>
+                <span class="campaign-label">Sales</span>
+            </div>
+
+            <a href="solution-marketing-canvas.html" class="nav-item active nav-subitem">
+                <span class="nav-icon">💡</span>
+                <span class="nav-text">Solution Marketing Canvas</span>
+            </a>
+            <a href="#" class="nav-item nav-subitem">
+                <span class="nav-icon">✨</span>
+                <span class="nav-text">Content Generator</span>
+            </a>
+            <a href="#" class="nav-item nav-subitem">
+                <span class="nav-icon">📁</span>
+                <span class="nav-text">Assets Library</span>
+            </a>
+        </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="container-fluid">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h1 class="dashboard-title">Solution Marketing Canvas</h1>
+                        <p class="dashboard-subtitle">Define your core value proposition and messaging.</p>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <button class="btn-primary" id="saveCanvasBtn">💾 Save Changes</button>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Canvas Grid -->
+        <section class="canvas-section">
+            <div class="container-fluid">
+                <div class="canvas-grid">
+                    <!-- Problems -->
+                    <div class="canvas-card div1">
+                        <div class="card-header">
+                            <h3 class="card-label">PROBLEMS</h3>
+                        </div>
+                        <div class="card-body">
+                            <textarea
+                                class="canvas-textarea"
+                                placeholder="What pain point are you solving?"
+                                id="customerProblem"
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Solution Features -->
+                    <div class="canvas-card div2">
+                        <div class="card-header">
+                            <h3 class="card-label">SOLUTION FEATURES</h3>
+                        </div>
+                        <div class="card-body">
+                            <textarea
+                                class="canvas-textarea"
+                                placeholder="What are you offering?"
+                                id="productService"
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Persona -->
+                    <div class="canvas-card div3">
+                        <div class="card-header">
+                            <h3 class="card-label">PERSONA</h3>
+                        </div>
+                        <div class="card-body">
+                            <textarea
+                                class="canvas-textarea"
+                                placeholder="Who is your target audience?"
+                                id="marketSegment"
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Unfair Advantage -->
+                    <div class="canvas-card div4">
+                        <div class="card-header">
+                            <h3 class="card-label">UNFAIR ADVANTAGE</h3>
+                        </div>
+                        <div class="card-body">
+                            <textarea
+                                class="canvas-textarea"
+                                placeholder="How does your solution uniquely solve the problem?"
+                                id="solutionValue"
+                            ></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Channels -->
+                    <div class="canvas-card div5">
+                        <div class="card-header">
+                            <h3 class="card-label">CHANNELS</h3>
+                        </div>
+                        <div class="card-body">
+                            <textarea
+                                class="canvas-textarea"
+                                placeholder="List your marketing channels"
+                                id="keyBenefits"
+                            ></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/canvas.js"></script>
+</body>
+</html>

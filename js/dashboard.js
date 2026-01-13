@@ -33,9 +33,10 @@ function renderSalesCampaignsTable(campaigns) {
     const rows = campaigns.map(campaign => {
         const platforms = getPlatformsString(campaign);
         const channelBadgeClass = `badge-${campaign.channel.toLowerCase()}`;
+        const campaignId = campaign.id || campaign.code;
 
         return `
-            <tr>
+            <tr class="campaign-row" data-campaign-id="${campaignId}" style="cursor: pointer;">
                 <td>${campaign.code}</td>
                 <td>${campaign.name}</td>
                 <td><span class="badge ${channelBadgeClass}">${campaign.channel}</span></td>
@@ -46,6 +47,14 @@ function renderSalesCampaignsTable(campaigns) {
     }).join('');
 
     tableBody.innerHTML = rows;
+
+    // Add click handlers to rows
+    tableBody.querySelectorAll('.campaign-row').forEach(row => {
+        row.addEventListener('click', () => {
+            const campaignId = row.getAttribute('data-campaign-id');
+            navigateToCanvas(campaignId);
+        });
+    });
 }
 
 // Render Marketing Campaigns Table
@@ -71,9 +80,10 @@ function renderMarketingCampaignsTable(campaigns) {
 
         const platforms = campaign.actualPlatform || 'N/A';
         const channelBadgeClass = `badge-${salesCampaign.channel.toLowerCase()}`;
+        const campaignId = campaign.id;
 
         return `
-            <tr>
+            <tr class="campaign-row" data-campaign-id="${campaignId}" style="cursor: pointer;">
                 <td>${campaign.salesCampaignCode}</td>
                 <td>${salesCampaign.name}</td>
                 <td><span class="badge ${channelBadgeClass}">${salesCampaign.channel}</span></td>
@@ -84,6 +94,14 @@ function renderMarketingCampaignsTable(campaigns) {
     }).join('');
 
     tableBody.innerHTML = rows;
+
+    // Add click handlers to rows
+    tableBody.querySelectorAll('.campaign-row').forEach(row => {
+        row.addEventListener('click', () => {
+            const campaignId = row.getAttribute('data-campaign-id');
+            navigateToCanvas(campaignId);
+        });
+    });
 }
 
 // Filter campaigns based on selected filters
@@ -177,4 +195,9 @@ function attachEventListeners() {
 function refreshDashboard() {
     updateCampaignCounts();
     filterCampaigns(); // This will re-render tables with current filters
+}
+
+// Navigate to canvas page
+function navigateToCanvas(campaignId) {
+    window.location.href = `solution-marketing-canvas.html?campaign=${encodeURIComponent(campaignId)}`;
 }
