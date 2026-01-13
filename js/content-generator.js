@@ -340,6 +340,23 @@ function attachContentGeneratorListeners() {
             // Store selected asset type
             selectedAssetType = card.getAttribute('data-asset-type');
 
+            // Try to load saved content for this asset type
+            const savedContent = loadContentFromLocalStorage(selectedAssetType);
+
+            if (savedContent) {
+                // Content exists - restore it
+                restoreContentState(savedContent);
+            } else {
+                // No saved content - reset state and show placeholder
+                document.querySelector('.preview-placeholder').style.display = 'flex';
+                document.getElementById('previewResult').style.display = 'none';
+                originalContent = '';
+                variantAContent = '';
+                variantBContent = '';
+                currentVersion = 'original';
+                abTestEnabled = false;
+            }
+
             // Enable generate button
             document.getElementById('generateBtn').disabled = false;
         });
@@ -422,6 +439,11 @@ function generateContent() {
         // Reset generate button
         generateBtn.classList.remove('loading');
         generateBtn.innerHTML = '<span class="btn-icon">✨</span> Generate Content';
+
+        // Auto-save generated content
+        if (saveContentToLocalStorage()) {
+            showAutoSaveNotification();
+        }
     }, 2000);
 }
 
@@ -466,6 +488,16 @@ function toggleEditMode() {
         isEditMode = true;
     } else {
         // Exit edit mode (save changes)
+
+        // Save edited content to the appropriate state variable
+        if (currentVersion === 'original') {
+            originalContent = resultContent.innerHTML;
+        } else if (currentVersion === 'variantA') {
+            variantAContent = resultContent.innerHTML;
+        } else if (currentVersion === 'variantB') {
+            variantBContent = resultContent.innerHTML;
+        }
+
         resultContent.contentEditable = false;
         resultContent.classList.remove('editable');
         editBtn.innerHTML = '✏️ Edit';
@@ -474,6 +506,9 @@ function toggleEditMode() {
 
         // Show save confirmation
         showSaveNotification();
+
+        // Auto-save edited content to localStorage
+        saveContentToLocalStorage();
     }
 }
 
@@ -521,6 +556,11 @@ function generateABTest() {
         // Reset button (button will be removed after showing tabs)
         abTestBtn.innerHTML = '🔬 A/B Test';
         abTestBtn.disabled = false;
+
+        // Auto-save A/B test variants
+        if (saveContentToLocalStorage()) {
+            showAutoSaveNotification();
+        }
     }, 2000);
 }
 
@@ -580,6 +620,9 @@ function switchVersion(version) {
             variantBContent = resultContent.innerHTML;
         }
         isEditMode = false;
+
+        // Silent save when switching versions (no notification)
+        saveContentToLocalStorage();
     }
 
     // Switch version
@@ -589,6 +632,9 @@ function switchVersion(version) {
 
 // Regenerate content
 function regenerateContent() {
+    // Clear saved content before regenerating
+    clearContentFromLocalStorage(selectedAssetType);
+
     // Reset edit mode and A/B test
     isEditMode = false;
     abTestEnabled = false;
@@ -597,4 +643,154 @@ function regenerateContent() {
     variantBContent = '';
     currentVersion = 'original';
     generateContent();
+}
+
+// ===== LocalStorage Functions =====
+
+// Save content to localStorage
+function saveContentToLocalStorage() {
+    if (!campaignId || !selectedAssetType) {
+        console.warn('Cannot save: missing campaignId or assetType');
+        return false;
+    }
+
+    const storageKey = `content_${campaignId}_${selectedAssetType}`;
+    const contentData = {
+        campaignId: campaignId,
+        assetType: selectedAssetType,
+        originalContent: originalContent,
+        variantAContent: variantAContent,
+        variantBContent: variantBContent,
+        currentVersion: currentVersion,
+        abTestEnabled: abTestEnabled,
+        lastModified: new Date().toISOString()
+    };
+
+    try {
+        localStorage.setItem(storageKey, JSON.stringify(contentData));
+        return true;
+    } catch (e) {
+        // Handle localStorage quota exceeded
+        if (e.name === 'QuotaExceededError') {
+            console.error('LocalStorage quota exceeded');
+            alert('Storage limit reached. Please clear some old content.');
+        }
+        return false;
+    }
+}
+
+// Load content from localStorage
+function loadContentFromLocalStorage(assetType) {
+    if (!campaignId || !assetType) {
+        return null;
+    }
+
+    const storageKey = `content_${campaignId}_${assetType}`;
+    const savedData = localStorage.getItem(storageKey);
+
+    if (!savedData) {
+        return null;
+    }
+
+    try {
+        return JSON.parse(savedData);
+    } catch (e) {
+        console.error('Failed to parse saved content:', e);
+        return null;
+    }
+}
+
+// Clear content from localStorage
+function clearContentFromLocalStorage(assetType) {
+    if (!campaignId || !assetType) {
+        return;
+    }
+
+    const storageKey = `content_${campaignId}_${assetType}`;
+    localStorage.removeItem(storageKey);
+}
+
+// Restore content state from saved data
+function restoreContentState(contentData) {
+    // Restore state variables
+    originalContent = contentData.originalContent || '';
+    variantAContent = contentData.variantAContent || '';
+    variantBContent = contentData.variantBContent || '';
+    currentVersion = contentData.currentVersion || 'original';
+    abTestEnabled = contentData.abTestEnabled || false;
+    isEditMode = false;
+
+    // Hide placeholder
+    document.querySelector('.preview-placeholder').style.display = 'none';
+
+    // Get preview result element
+    const previewResult = document.getElementById('previewResult');
+
+    // Render content based on A/B test state
+    if (abTestEnabled) {
+        updateResultWithABTest();
+    } else {
+        // Render original content only
+        const content = mockContent[selectedAssetType];
+        previewResult.innerHTML = `
+            <div class="result-header">
+                <span class="result-type">${content.title}</span>
+                <div class="result-actions">
+                    <button class="btn-abtest" id="abTestBtn" onclick="generateABTest()">🔬 A/B Test</button>
+                    <button class="btn-edit" id="editBtn" onclick="toggleEditMode()">✏️ Edit</button>
+                    <button class="btn-copy" onclick="copyContent()">📋 Copy</button>
+                    <button class="btn-regenerate" onclick="regenerateContent()">🔄 Regenerate</button>
+                </div>
+            </div>
+            <div class="result-content" id="resultContent">
+                ${originalContent}
+            </div>
+        `;
+    }
+
+    previewResult.style.display = 'block';
+
+    // Enable placement buttons
+    enablePlacementButtons();
+
+    // Show "loaded" indicator briefly
+    showLoadNotification();
+}
+
+// Show load notification
+function showLoadNotification() {
+    const notification = document.createElement('div');
+    notification.className = 'save-notification';
+    notification.innerHTML = '📂 Saved content loaded';
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 1500);
+}
+
+// Show auto-save notification
+function showAutoSaveNotification() {
+    const notification = document.createElement('div');
+    notification.className = 'save-notification';
+    notification.innerHTML = '💾 Auto-saved';
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 1500);
 }
