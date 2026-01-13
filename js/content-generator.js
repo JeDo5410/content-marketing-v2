@@ -1,8 +1,14 @@
 // Content Generator State
 let selectedAssetType = null;
 let campaignId = null;
+let isEditMode = false;
+let abTestEnabled = false;
+let currentVersion = 'original';
+let originalContent = '';
+let variantAContent = '';
+let variantBContent = '';
 
-// Mock AI-generated content for each asset type
+// Mock AI-generated content for each asset type (Version A)
 const mockContent = {
     'single-image': {
         title: 'Social Media Post Copy',
@@ -89,6 +95,191 @@ const mockContent = {
         <p><strong>Final CTA:</strong><br>
         "Ready to Transform Your Future? [Apply Now]"</p>
         <div class="result-meta">Conversion-optimized | Above-the-fold CTA | Mobile-responsive</div>`
+    }
+};
+
+// Mock AI-generated content variants for A/B testing (Variant A)
+const mockContentVariantA = {
+    'single-image': {
+        title: 'Social Media Post Copy - Variant A',
+        content: `<h3>💼 Your AI Career Starts With Real Experience</h3>
+        <p><strong>Headline:</strong> Build Your AI Portfolio While Getting Paid</p>
+        <p><strong>Body Copy:</strong></p>
+        <p>Traditional education gives you theory. We give you real AI projects, real clients, and real paychecks. Our work-integrated program turns beginners into job-ready AI developers.</p>
+        <p><strong>Why Choose Us:</strong></p>
+        <ul>
+            <li>Work on live AI projects from week one</li>
+            <li>Earn monthly income throughout the program</li>
+            <li>Graduate with a portfolio employers respect</li>
+        </ul>
+        <p><strong>Call to Action:</strong> Start Building Your Future → [Link]</p>
+        <div class="result-meta">Optimized for: TikTok Feed | Tone: Action-Oriented | Length: 140 words</div>`
+    },
+    'email-copy': {
+        title: 'Email Newsletter Copy - Variant A',
+        content: `<h3>Subject Line: Build Your AI Career the Smart Way 🚀</h3>
+        <p><strong>Preview Text:</strong> Real projects + Real pay = Real career opportunities</p>
+        <p><strong>Email Body:</strong></p>
+        <p>Hey [First Name],</p>
+        <p>Most AI courses teach you skills. We give you something better: experience.</p>
+        <p>Our work-integrated program lets you work on actual AI applications while earning a stipend. By the time you graduate, you'll have a portfolio of shipped products.</p>
+        <p><strong>What makes us unique:</strong></p>
+        <ul>
+            <li>Get assigned to real client projects immediately</li>
+            <li>Monthly stipend while you learn and build</li>
+            <li>Mentorship from experienced AI developers</li>
+            <li>Job placement support with our partner companies</li>
+        </ul>
+        <p>Start your journey from student to professional AI developer.</p>
+        <p><strong>[CTA Button: Discover the Program]</strong></p>
+        <p>To your success,<br>The WIM SE Team</p>
+        <div class="result-meta">Optimized for: Newsletter | Tone: Aspirational & Practical | Length: 155 words</div>`
+    },
+    'carousel': {
+        title: 'LinkedIn/Instagram Carousel Script - Variant A',
+        content: `<h3>5-Slide Carousel: "From Zero to Hired: The Smart Path"</h3>
+        <p><strong>Slide 1 (Hook):</strong><br>
+        "What if you got paid to learn AI development?"<br>
+        Visual: Person coding with money symbols floating</p>
+        <p><strong>Slide 2 (Current Problem):</strong><br>
+        "Most AI Programs Leave You With:"<br>
+        📜 A certificate<br>
+        🤷 No real experience<br>
+        ❌ No job prospects</p>
+        <p><strong>Slide 3 (Better Way):</strong><br>
+        "WIM SE Is Different"<br>
+        💻 Real client projects<br>
+        💰 Monthly stipend<br>
+        🎯 Portfolio that matters</p>
+        <p><strong>Slide 4 (The Journey):</strong><br>
+        "Your Path to Success"<br>
+        Month 1: Start on live projects<br>
+        Months 2-6: Build & deploy features<br>
+        Graduation: Job-ready portfolio + connections</p>
+        <p><strong>Slide 5 (CTA):</strong><br>
+        "Start Your Smart AI Career Path"<br>
+        [Apply Now Button]<br>
+        Available in: Malaysia | Philippines | Indonesia</p>
+        <div class="result-meta">Optimized for: LinkedIn/Instagram | Format: 5 slides | Strategy: Solution-focused</div>`
+    },
+    'landing-page': {
+        title: 'Landing Page Copy - Variant A',
+        content: `<h3>Landing Page Structure - Variant A</h3>
+        <p><strong>Hero Section:</strong></p>
+        <p>Headline: "Build Your AI Career While Earning Money"<br>
+        Subheadline: "Work-integrated learning that pays you to gain the experience employers demand"<br>
+        CTA: "Get Started" | "View Programs"</p>
+        <p><strong>Value Proposition:</strong></p>
+        <p>"Skip the theory-only courses. Our program puts you on real AI projects from day one, with a monthly stipend while you build the portfolio that gets you hired."</p>
+        <p><strong>How It Works:</strong></p>
+        <ul>
+            <li>Apply to our postgraduate AI development program</li>
+            <li>Get matched with live client projects in week one</li>
+            <li>Earn a stipend while developing real AI solutions</li>
+            <li>Build a portfolio that proves your capabilities</li>
+            <li>Graduate with job offers from partner companies</li>
+        </ul>
+        <p><strong>Benefits Section:</strong></p>
+        <p>✓ Real experience, not just theory<br>
+        ✓ Get paid while you learn<br>
+        ✓ Portfolio of shipped projects<br>
+        ✓ Industry connections</p>
+        <p><strong>Social Proof:</strong><br>
+        "Join 200+ graduates now working at leading tech companies"</p>
+        <p><strong>Final CTA:</strong><br>
+        "Start Your Journey Today [Apply Now]"</p>
+        <div class="result-meta">Conversion-optimized | Value-focused | Clear progression</div>`
+    }
+};
+
+// Mock AI-generated content variants for A/B testing (Variant B)
+const mockContentVariantB = {
+    'single-image': {
+        title: 'Social Media Post Copy - Variant B',
+        content: `<h3>💡 Break Into AI Development Without Experience</h3>
+        <p><strong>Headline:</strong> Get Paid While Learning AI Application Development</p>
+        <p><strong>Body Copy:</strong></p>
+        <p>Stop letting "no experience required" job ads reject you. Our work-integrated program solves the catch-22: earn money while building the real-world AI portfolio that employers demand.</p>
+        <p><strong>What You'll Get:</strong></p>
+        <ul>
+            <li>Real AI projects with actual clients</li>
+            <li>Monthly stipend while you develop your skills</li>
+            <li>Portfolio that proves you can deliver</li>
+        </ul>
+        <p><strong>Call to Action:</strong> Start Earning While Learning → [Link]</p>
+        <div class="result-meta">Optimized for: TikTok Feed | Tone: Direct & Problem-Focused | Length: 145 words</div>`
+    },
+    'email-copy': {
+        title: 'Email Newsletter Copy - Variant B',
+        content: `<h3>Subject Line: Still Applying with No AI Experience? Try This Instead 💼</h3>
+        <p><strong>Preview Text:</strong> Break the experience barrier - Get paid to build your AI portfolio</p>
+        <p><strong>Email Body:</strong></p>
+        <p>Hi [First Name],</p>
+        <p>Tired of seeing "2+ years experience required" on every AI developer job?</p>
+        <p>Here's the problem: You need experience to get hired, but you need a job to get experience. Our WIM SE program breaks this cycle.</p>
+        <p><strong>Here's how it works:</strong></p>
+        <ul>
+            <li>Join our postgraduate program with live client projects</li>
+            <li>Earn a stipend from day one</li>
+            <li>Build a portfolio of shipped AI applications</li>
+            <li>Graduate with proven experience employers recognize</li>
+        </ul>
+        <p>No more "entry-level" jobs requiring 3 years of experience.</p>
+        <p><strong>[CTA Button: See How It Works]</strong></p>
+        <p>Cheers,<br>The WIM SE Team</p>
+        <div class="result-meta">Optimized for: Newsletter | Tone: Problem-Solution Focused | Length: 165 words</div>`
+    },
+    'carousel': {
+        title: 'LinkedIn/Instagram Carousel Script - Variant B',
+        content: `<h3>5-Slide Carousel: "The Experience Trap (And How to Escape It)"</h3>
+        <p><strong>Slide 1 (Hook):</strong><br>
+        "Entry-level AI job: Must have 3 years experience 🤔"<br>
+        Visual: Screenshot of contradictory job posting</p>
+        <p><strong>Slide 2 (Pain Point):</strong><br>
+        "The Impossible Catch-22"<br>
+        Can't get hired without experience<br>
+        Can't get experience without being hired<br>
+        Sound familiar?</p>
+        <p><strong>Slide 3 (Solution):</strong><br>
+        "What If You Could Get Paid to Gain Experience?"<br>
+        That's exactly what we offer:<br>
+        💰 Monthly stipend<br>
+        🚀 Real AI projects<br>
+        📈 Actual portfolio</p>
+        <p><strong>Slide 4 (How It Works):</strong><br>
+        "Work-Integrated Learning = Real Results"<br>
+        Week 1: Onboard to live project<br>
+        Month 1-6: Build & ship features<br>
+        After: Portfolio that gets you hired</p>
+        <p><strong>Slide 5 (CTA):</strong><br>
+        "Break Free from the Experience Trap"<br>
+        [Apply Today Button]<br>
+        Programs in: 🇲🇾 🇵🇭 🇮🇩</p>
+        <div class="result-meta">Optimized for: LinkedIn/Instagram | Format: 5 slides | Strategy: Pain-point driven</div>`
+    },
+    'landing-page': {
+        title: 'Landing Page Copy - Variant B',
+        content: `<h3>Landing Page Structure - Variant B</h3>
+        <p><strong>Hero Section:</strong></p>
+        <p>Headline: "Get Paid to Build Your AI Career (Yes, Really)"<br>
+        Subheadline: "Break the experience catch-22 with work-integrated learning that pays you while you learn"<br>
+        CTA: "See How It Works" | "Apply Now"</p>
+        <p><strong>Problem Section:</strong></p>
+        <p>"Every AI job wants experience. But how do you get experience without a job? You're stuck applying to hundreds of positions with no responses. Sound familiar?"</p>
+        <p><strong>Solution Section:</strong></p>
+        <p>"Our WIM SE program solves this: You work on real AI projects from day one, earning a monthly stipend while building the exact portfolio employers want to see."</p>
+        <p><strong>How It Works:</strong></p>
+        <ul>
+            <li>Enroll in our postgraduate AI development program</li>
+            <li>Get assigned to real client projects immediately</li>
+            <li>Earn monthly stipend while learning and building</li>
+            <li>Graduate with proven experience and job connections</li>
+        </ul>
+        <p><strong>Social Proof:</strong><br>
+        "Join 200+ graduates who broke into AI development - even without prior experience"</p>
+        <p><strong>Final CTA:</strong><br>
+        "Ready to Break Free? [Apply Now]"</p>
+        <div class="result-meta">Conversion-optimized | Problem-focused messaging | Urgency-driven</div>`
     }
 };
 
@@ -203,15 +394,22 @@ function generateContent() {
         const previewResult = document.getElementById('previewResult');
         const content = mockContent[selectedAssetType];
 
+        // Store Original content
+        originalContent = content.content;
+        currentVersion = 'original';
+        abTestEnabled = false;
+
         previewResult.innerHTML = `
             <div class="result-header">
                 <span class="result-type">${content.title}</span>
                 <div class="result-actions">
+                    <button class="btn-abtest" id="abTestBtn" onclick="generateABTest()">🔬 A/B Test</button>
+                    <button class="btn-edit" id="editBtn" onclick="toggleEditMode()">✏️ Edit</button>
                     <button class="btn-copy" onclick="copyContent()">📋 Copy</button>
                     <button class="btn-regenerate" onclick="regenerateContent()">🔄 Regenerate</button>
                 </div>
             </div>
-            <div class="result-content">
+            <div class="result-content" id="resultContent">
                 ${content.content}
             </div>
         `;
@@ -253,7 +451,150 @@ function copyContent() {
     });
 }
 
+// Toggle edit mode
+function toggleEditMode() {
+    const resultContent = document.getElementById('resultContent');
+    const editBtn = document.getElementById('editBtn');
+
+    if (!isEditMode) {
+        // Enter edit mode
+        resultContent.contentEditable = true;
+        resultContent.classList.add('editable');
+        resultContent.focus();
+        editBtn.innerHTML = '💾 Save';
+        editBtn.classList.add('save-mode');
+        isEditMode = true;
+    } else {
+        // Exit edit mode (save changes)
+        resultContent.contentEditable = false;
+        resultContent.classList.remove('editable');
+        editBtn.innerHTML = '✏️ Edit';
+        editBtn.classList.remove('save-mode');
+        isEditMode = false;
+
+        // Show save confirmation
+        showSaveNotification();
+    }
+}
+
+// Show save notification
+function showSaveNotification() {
+    const notification = document.createElement('div');
+    notification.className = 'save-notification';
+    notification.textContent = '✓ Changes saved';
+    document.body.appendChild(notification);
+
+    setTimeout(() => {
+        notification.classList.add('show');
+    }, 10);
+
+    setTimeout(() => {
+        notification.classList.remove('show');
+        setTimeout(() => {
+            notification.remove();
+        }, 300);
+    }, 2000);
+}
+
+// Generate A/B test variants
+function generateABTest() {
+    if (!selectedAssetType) return;
+
+    const abTestBtn = document.getElementById('abTestBtn');
+
+    // Show loading state
+    abTestBtn.innerHTML = '⏳ Generating Variants...';
+    abTestBtn.disabled = true;
+
+    // Simulate AI generation delay
+    setTimeout(() => {
+        // Get variant A and B content
+        const variantAData = mockContentVariantA[selectedAssetType];
+        const variantBData = mockContentVariantB[selectedAssetType];
+        variantAContent = variantAData.content;
+        variantBContent = variantBData.content;
+        abTestEnabled = true;
+
+        // Update the result to show tabs
+        updateResultWithABTest();
+
+        // Reset button (button will be removed after showing tabs)
+        abTestBtn.innerHTML = '🔬 A/B Test';
+        abTestBtn.disabled = false;
+    }, 2000);
+}
+
+// Update result to show A/B test tabs
+function updateResultWithABTest() {
+    const previewResult = document.getElementById('previewResult');
+    const titleOriginal = mockContent[selectedAssetType].title;
+    const titleVariantA = mockContentVariantA[selectedAssetType].title;
+    const titleVariantB = mockContentVariantB[selectedAssetType].title;
+
+    // Get current title based on selected version
+    let currentTitle = titleOriginal;
+    if (currentVersion === 'variantA') {
+        currentTitle = titleVariantA;
+    } else if (currentVersion === 'variantB') {
+        currentTitle = titleVariantB;
+    }
+
+    previewResult.innerHTML = `
+        <div class="result-header">
+            <span class="result-type">${currentTitle}</span>
+            <div class="result-actions">
+                <button class="btn-edit" id="editBtn" onclick="toggleEditMode()">✏️ Edit</button>
+                <button class="btn-copy" onclick="copyContent()">📋 Copy</button>
+                <button class="btn-regenerate" onclick="regenerateContent()">🔄 Regenerate</button>
+            </div>
+        </div>
+        <div class="ab-test-tabs">
+            <button class="ab-tab ${currentVersion === 'original' ? 'active' : ''}" onclick="switchVersion('original')">
+                Original
+            </button>
+            <button class="ab-tab ${currentVersion === 'variantA' ? 'active' : ''}" onclick="switchVersion('variantA')">
+                Variant A
+            </button>
+            <button class="ab-tab ${currentVersion === 'variantB' ? 'active' : ''}" onclick="switchVersion('variantB')">
+                Variant B
+            </button>
+        </div>
+        <div class="result-content" id="resultContent">
+            ${currentVersion === 'original' ? originalContent : (currentVersion === 'variantA' ? variantAContent : variantBContent)}
+        </div>
+    `;
+}
+
+// Switch between A/B test versions
+function switchVersion(version) {
+    if (version === currentVersion) return;
+
+    // Save current content if in edit mode
+    if (isEditMode) {
+        const resultContent = document.getElementById('resultContent');
+        if (currentVersion === 'original') {
+            originalContent = resultContent.innerHTML;
+        } else if (currentVersion === 'variantA') {
+            variantAContent = resultContent.innerHTML;
+        } else if (currentVersion === 'variantB') {
+            variantBContent = resultContent.innerHTML;
+        }
+        isEditMode = false;
+    }
+
+    // Switch version
+    currentVersion = version;
+    updateResultWithABTest();
+}
+
 // Regenerate content
 function regenerateContent() {
+    // Reset edit mode and A/B test
+    isEditMode = false;
+    abTestEnabled = false;
+    originalContent = '';
+    variantAContent = '';
+    variantBContent = '';
+    currentVersion = 'original';
     generateContent();
 }
