@@ -152,4 +152,15 @@ function attachCanvasEventListeners() {
             saveCanvasData();
         });
     });
+
+    // Content Generator link
+    const contentGeneratorLink = document.getElementById('contentGeneratorLink');
+    if (contentGeneratorLink) {
+        contentGeneratorLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (canvasData.campaignId) {
+                window.location.href = `content-generator.html?campaign=${encodeURIComponent(canvasData.campaignId)}`;
+            }
+        });
+    }
 }

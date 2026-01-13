@@ -302,9 +302,8 @@ function navigateToContentCreationFromModal() {
         addMarketingCampaignToDashboard(selectedCampaignId);
     }
 
-    // Navigate to content creation page (placeholder for now)
-    alert('Content Creation page coming soon!');
-    closeModal();
+    // Navigate to content generator page
+    window.location.href = `content-generator.html?campaign=${encodeURIComponent(selectedCampaignId)}`;
 }
 
 // Attach close button listener
