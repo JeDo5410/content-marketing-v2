@@ -325,18 +325,18 @@ function initContentGenerator() {
 
 // Attach event listeners
 function attachContentGeneratorListeners() {
-    // Asset card selection
-    const assetCards = document.querySelectorAll('.asset-card');
-    assetCards.forEach(card => {
-        card.addEventListener('click', () => {
-            // Remove selected class from all cards
-            assetCards.forEach(c => c.classList.remove('selected'));
+    // Asset list item selection
+    const assetItems = document.querySelectorAll('.asset-list-item');
+    assetItems.forEach(item => {
+        item.addEventListener('click', () => {
+            // Remove selected class from all items
+            assetItems.forEach(i => i.classList.remove('selected'));
 
-            // Add selected class to clicked card
-            card.classList.add('selected');
+            // Add selected class to clicked item
+            item.classList.add('selected');
 
             // Store selected asset type
-            selectedAssetType = card.getAttribute('data-asset-type');
+            selectedAssetType = item.getAttribute('data-asset-type');
 
             // Try to load saved content for this asset type
             const savedContent = loadContentFromLocalStorage(selectedAssetType);
@@ -864,20 +864,31 @@ function updateProgressDisplay() {
     const allAssetTypes = ['single-image', 'email-copy', 'carousel', 'landing-page'];
 
     allAssetTypes.forEach(assetType => {
-        const indicator = document.getElementById(`indicator-${assetType}`);
-        if (!indicator) return;
-
         const isCompleted = progress.completedAssets.includes(assetType);
-        const icon = indicator.querySelector('.indicator-icon');
 
-        if (isCompleted) {
-            indicator.classList.remove('pending');
-            indicator.classList.add('completed');
-            if (icon) icon.textContent = '✓';
-        } else {
-            indicator.classList.remove('completed');
-            indicator.classList.add('pending');
-            if (icon) icon.textContent = '○';
+        // Update progress tracker indicators
+        const indicator = document.getElementById(`indicator-${assetType}`);
+        if (indicator) {
+            const icon = indicator.querySelector('.indicator-icon');
+            if (isCompleted) {
+                indicator.classList.remove('pending');
+                indicator.classList.add('completed');
+                if (icon) icon.textContent = '✓';
+            } else {
+                indicator.classList.remove('completed');
+                indicator.classList.add('pending');
+                if (icon) icon.textContent = '○';
+            }
+        }
+
+        // Update asset list status
+        const listStatus = document.getElementById(`status-${assetType}`);
+        if (listStatus) {
+            if (isCompleted) {
+                listStatus.classList.add('completed');
+            } else {
+                listStatus.classList.remove('completed');
+            }
         }
     });
 }

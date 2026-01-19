@@ -141,45 +141,64 @@
     margin-bottom: 30px;
 }
 
-.asset-card {
-    background: white;
-    border: 2px solid #e9ecef;
-    border-radius: 12px;
-    padding: 24px;
-    text-align: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.asset-card:hover {
-    border-color: #B3A125;
-    background-color: #fffef8;
-    transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(179, 161, 37, 0.2);
-}
-
-.asset-card.selected {
-    border-color: #B3A125;
-    background-color: #fffef8;
-    box-shadow: 0 2px 8px rgba(179, 161, 37, 0.3);
-}
-
-.asset-icon {
-    font-size: 48px;
+.asset-list-title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #7f8c8d;
+    letter-spacing: 0.5px;
     margin-bottom: 12px;
 }
 
-.asset-title {
-    font-size: 16px;
-    font-weight: 600;
-    color: #2c3e50;
-    margin-bottom: 6px;
+.asset-list {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
 }
 
-.asset-description {
-    font-size: 13px;
-    color: #7f8c8d;
-    margin: 0;
+.asset-list-item {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    border-bottom: 1px solid #f0f0f0;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.asset-list-item:last-child {
+    border-bottom: none;
+}
+
+.asset-list-item:hover {
+    background-color: #f8f9fa;
+}
+
+.asset-list-item.selected {
+    background-color: #fffef8;
+    border-left: 3px solid #B3A125;
+}
+
+.asset-list-icon {
+    font-size: 20px;
+    width: 32px;
+    text-align: center;
+    margin-right: 12px;
+}
+
+.asset-list-name {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+.asset-list-status {
+    font-size: 14px;
+    color: #27ae60;
+}
+
+.asset-list-status.completed::before {
+    content: '✓';
 }
 
 /* Generate Button */
