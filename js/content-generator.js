@@ -296,34 +296,30 @@ function initContentGenerator() {
     campaignId = urlParams.get('campaign');
 
     if (campaignId) {
-        updateCampaignHeader(campaignId);
+        // Update top nav campaign code
+        const navCampaignCode = document.getElementById('navCampaignCode');
+        if (navCampaignCode) {
+            const truncated = campaignId.length > 20 ? campaignId.substring(0, 20) + '...' : campaignId;
+            navCampaignCode.textContent = truncated;
+        }
+
+        // Update nav links with campaign parameter
+        const navCanvasLink = document.getElementById('navCanvasLink');
+        const navContentLink = document.getElementById('navContentLink');
+        const navAssetsLink = document.getElementById('navAssetsLink');
+
+        if (navCanvasLink) {
+            navCanvasLink.href = `solution-marketing-canvas.html?campaign=${encodeURIComponent(campaignId)}`;
+        }
+        if (navContentLink) {
+            navContentLink.href = `content-generator.html?campaign=${encodeURIComponent(campaignId)}`;
+        }
+        if (navAssetsLink) {
+            navAssetsLink.href = `asset-library.html?campaign=${encodeURIComponent(campaignId)}`;
+        }
+
         // Initialize progress tracker
         syncProgressWithContent();
-    }
-}
-
-// Update campaign header in sidebar
-function updateCampaignHeader(campaignId) {
-    const salesCampaigns = JSON.parse(localStorage.getItem('selectedSalesCampaigns') || '[]');
-    const marketingCampaigns = JSON.parse(localStorage.getItem('selectedMarketingCampaigns') || '[]');
-
-    let campaign = salesCampaigns.find(c => c.id === campaignId || c.code === campaignId);
-    let campaignType = 'Sales';
-
-    if (!campaign) {
-        campaign = marketingCampaigns.find(c => c.id === campaignId);
-        campaignType = 'Marketing';
-    }
-
-    if (campaign) {
-        const headerElement = document.getElementById('campaignHeader');
-        const code = campaign.code || campaign.salesCampaignCode;
-        const truncatedCode = code.length > 20 ? code.substring(0, 20) + '...' : code;
-
-        headerElement.innerHTML = `
-            <span class="campaign-title">${campaignType} Campaign: ${truncatedCode}</span>
-            <span class="campaign-label">${campaignType}</span>
-        `;
     }
 }
 

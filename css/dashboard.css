@@ -75,11 +75,143 @@ body {
     font-size: 18px;
 }
 
+/* Top Header Bar */
+.top-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: #5a6a7a;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 1001;
+}
+
+.top-header-logo {
+    height: 28px;
+}
+
+.top-header-profile {
+    width: 36px;
+    height: 36px;
+    background: #e8e8e8;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+}
+
+.top-header-profile::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 10px;
+    height: 10px;
+    background: #27ae60;
+    border-radius: 50%;
+    border: 2px solid #5a6a7a;
+}
+
+.top-header-profile svg {
+    width: 20px;
+    height: 20px;
+    fill: #7f8c8d;
+}
+
+/* Top Navigation Bar (below header) */
+.top-nav {
+    position: fixed;
+    top: 50px;
+    left: 0;
+    right: 0;
+    height: 50px;
+    background: #ffffff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 1000;
+}
+
+.top-nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: #193e6b;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.top-nav-brand:hover {
+    color: #2c5282;
+}
+
+.top-nav-links {
+    display: flex;
+    gap: 6px;
+}
+
+.top-nav-link {
+    padding: 8px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #7f8c8d;
+    font-size: 13px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.top-nav-link:hover {
+    background: #f8f9fa;
+    color: #193e6b;
+}
+
+.top-nav-link.active {
+    background: #193e6b;
+    color: white;
+}
+
+.top-nav-campaign {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #7f8c8d;
+    font-size: 13px;
+}
+
+.campaign-code {
+    background: #f0f0f0;
+    padding: 4px 12px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-weight: 600;
+    color: #2c3e50;
+}
+
 /* Main Content */
 .main-content {
     margin-left: 250px;
     padding: 30px;
     min-height: 100vh;
+}
+
+/* Main content without sidebar (with header + nav) */
+.main-content.no-sidebar {
+    margin-left: 0;
+    padding-top: 130px;
+}
+
+/* Dashboard variant - header only, no campaign nav */
+.main-content.no-sidebar.dashboard {
+    padding-top: 80px;
 }
 
 /* Dashboard Header */
@@ -775,6 +907,39 @@ body {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+    .top-header {
+        padding: 0 12px;
+    }
+
+    .top-header-logo {
+        height: 24px;
+    }
+
+    .top-nav {
+        flex-direction: column;
+        height: auto;
+        padding: 10px;
+        gap: 10px;
+    }
+
+    .top-nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .top-nav-link {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .main-content.no-sidebar {
+        padding-top: 180px;
+    }
+
+    .main-content.no-sidebar.dashboard {
+        padding-top: 80px;
+    }
+
     .sidebar {
         width: 70px;
         padding: 20px 10px;

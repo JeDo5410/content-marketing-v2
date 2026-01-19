@@ -23,7 +23,7 @@ function initCanvas() {
     if (campaignId) {
         canvasData.campaignId = campaignId;
         loadCanvasData(campaignId);
-        updateCampaignHeader(campaignId);
+        updateTopNav(campaignId);
     } else {
         // If no campaign ID, redirect to dashboard
         console.warn('No campaign ID provided');
@@ -91,28 +91,28 @@ function autoPopulateFromCampaign(campaignId) {
     }
 }
 
-// Update campaign header in sidebar
-function updateCampaignHeader(campaignId) {
-    const salesCampaigns = JSON.parse(localStorage.getItem('selectedSalesCampaigns') || '[]');
-    const marketingCampaigns = JSON.parse(localStorage.getItem('selectedMarketingCampaigns') || '[]');
-
-    let campaign = salesCampaigns.find(c => c.id === campaignId || c.code === campaignId);
-    let campaignType = 'Sales';
-
-    if (!campaign) {
-        campaign = marketingCampaigns.find(c => c.id === campaignId);
-        campaignType = 'Marketing';
+// Update top navigation bar with campaign info
+function updateTopNav(campaignId) {
+    // Update campaign code display
+    const navCampaignCode = document.getElementById('navCampaignCode');
+    if (navCampaignCode) {
+        const truncated = campaignId.length > 20 ? campaignId.substring(0, 20) + '...' : campaignId;
+        navCampaignCode.textContent = truncated;
     }
 
-    if (campaign) {
-        const headerElement = document.getElementById('campaignHeader');
-        const code = campaign.code || campaign.salesCampaignCode;
-        const truncatedCode = code.length > 20 ? code.substring(0, 20) + '...' : code;
+    // Update nav links with campaign parameter
+    const navCanvasLink = document.getElementById('navCanvasLink');
+    const navContentLink = document.getElementById('navContentLink');
+    const navAssetsLink = document.getElementById('navAssetsLink');
 
-        headerElement.innerHTML = `
-            <span class="campaign-title">${campaignType} Campaign: ${truncatedCode}</span>
-            <span class="campaign-label">${campaignType}</span>
-        `;
+    if (navCanvasLink) {
+        navCanvasLink.href = `solution-marketing-canvas.html?campaign=${encodeURIComponent(campaignId)}`;
+    }
+    if (navContentLink) {
+        navContentLink.href = `content-generator.html?campaign=${encodeURIComponent(campaignId)}`;
+    }
+    if (navAssetsLink) {
+        navAssetsLink.href = `asset-library.html?campaign=${encodeURIComponent(campaignId)}`;
     }
 }
 
